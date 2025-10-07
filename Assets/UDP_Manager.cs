@@ -7,13 +7,20 @@ using System.Net.Sockets;
 using System.Text;
 using UnityEditor.PackageManager;
 
-public class UDP_Test : MonoBehaviour
+public class UDP_Manager : MonoBehaviour
 {
-    [SerializeField]
     float[] float_data = new float[8];
 
     private UdpClient udpClient;
     private IPEndPoint remoteEndPoint;
+
+    public void setFloats(float[] data)
+    {
+        for (int i = 0; i < data.Length; i++)
+        {
+            float_data[i] = data[i];
+        }
+    }
 
     byte[] ProcessUDP(float[] dists)
     {
@@ -25,7 +32,6 @@ public class UDP_Test : MonoBehaviour
         return sendBuffer;
     }
 
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -44,5 +50,6 @@ public class UDP_Test : MonoBehaviour
     {
         byte[] rawDistsToSend = ProcessUDP(float_data);
         udpClient.Send(rawDistsToSend, rawDistsToSend.Length, remoteEndPoint);
+        Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7]);
     }
 }
