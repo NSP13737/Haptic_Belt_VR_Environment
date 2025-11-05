@@ -7,8 +7,7 @@ public class Study_Params_Manager : MonoBehaviour
 
     UDP_Manager udp;
 
-    [SerializeField]
-    float numDrivers;
+    
     [SerializeField]
     float conditionSelection;
     [SerializeField]
@@ -33,14 +32,15 @@ public class Study_Params_Manager : MonoBehaviour
     void Update()
     {
         float[] studyParamsBuffer =
-            {numDrivers,
+            {
             conditionSelection,
             minActivationDist,
             maxActivationDist,
             minFreqHz,
             maxFreqHz,
             fixedDutyCycle,
-            fixedPeriodMs};
+            fixedPeriodMs
+            };
 
         udp.setStudyParams(studyParamsBuffer);
     }

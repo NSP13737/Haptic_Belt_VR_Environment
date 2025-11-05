@@ -9,14 +9,14 @@ using UnityEditor.PackageManager;
 
 public class UDP_Manager : MonoBehaviour
 {
-    float[] float_data = new float[16];
+    float[] float_data = new float[15];
 
     private UdpClient udpClient;
     private IPEndPoint remoteEndPoint;
 
     public void setDistances(float[] data)
     {
-        for (int i = 0; i <= 7; i++)
+        for (int i = 0; i < 8; i++)
         {
             float_data[i] = data[i];
         }
@@ -24,7 +24,7 @@ public class UDP_Manager : MonoBehaviour
 
     public void setStudyParams(float[] data)
     {
-        for (int i = 0; i <= 7; i++)
+        for (int i = 0; i < 7; i++)
         {
             //Offset float data by 8 because it already contains distance values in first 8 entries
             float_data[i+8] = data[i];
@@ -60,13 +60,12 @@ public class UDP_Manager : MonoBehaviour
         byte[] rawDataToSend = ProcessUDP(float_data);
         udpClient.Send(rawDataToSend, rawDataToSend.Length, remoteEndPoint);
         Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7] + "\n" +
-            "numDrivers: "+float_data[8]+"\n" +
-            "conditionSelection: " + float_data[9] + "\n" +
-            "minActivationDist: " + float_data[10] + "\n" +
-            "maxActivationDist: " + float_data[11] + "\n" +
-            "minFreqHz: " + float_data[12] + "\n" +
-            "maxFreqHz: " + float_data[13] + "\n" +
-            "fixedDutyCycle: " + float_data[14] + "\n" +
-            "fixedPeriodMs: " + float_data[15]);
+            "conditionSelection: " + float_data[8] + "\n" +
+            "minActivationDist: " + float_data[9] + "\n" +
+            "maxActivationDist: " + float_data[10] + "\n" +
+            "minFreqHz: " + float_data[11] + "\n" +
+            "maxFreqHz: " + float_data[12] + "\n" +
+            "fixedDutyCycle: " + float_data[13] + "\n" +
+            "fixedPeriodMs: " + float_data[14]);
     }
 }
