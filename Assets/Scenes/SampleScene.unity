@@ -1225,6 +1225,7 @@ GameObject:
   - component: {fileID: 1556322024}
   - component: {fileID: 1556322023}
   - component: {fileID: 1556322025}
+  - component: {fileID: 1556322026}
   m_Layer: 0
   m_Name: Belt_Virtualization
   m_TagString: Untagged
@@ -1272,7 +1273,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxRayDist: 20
-  rayCount: 1
+  rayCount: 8
+--- !u!114 &1556322026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556322022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c490d5f552df7544965c0fb8c8b4b70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numDrivers: 0
+  conditionSelection: 0
+  minActivationDist: 0
+  maxActivationDist: 0
+  minFreqHz: 0
+  maxFreqHz: 0
+  fixedDutyCycle: 0
+  fixedPeriodMs: 0
 --- !u!1001 &1819641313
 PrefabInstance:
   m_ObjectHideFlags: 0

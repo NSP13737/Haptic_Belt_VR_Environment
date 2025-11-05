@@ -31,7 +31,7 @@ public class Distance_Caster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float[] floatBuffer = new float[8];
+        float[] distancesBuffer = new float[8];
 
         for (int i = 0; i < rayCount; i++)
         {
@@ -44,19 +44,19 @@ public class Distance_Caster : MonoBehaviour
             RaycastHit currentHit;
             if (Physics.Raycast(currentRay, out currentHit, maxRayDist, layerMask))
             {
-                floatBuffer[i] = currentHit.distance;
+                distancesBuffer[i] = currentHit.distance;
                 Debug.DrawRay(currentRay.origin, currentRay.direction*currentHit.distance, Color.green);
                 //Debug.Log(currentHit.distance);
             }
             else
             {
-                floatBuffer[i] = float.MaxValue; // Normally in this case currentRay.distance would return 0, but we want to send a very far distance for the microcontroller
+                distancesBuffer[i] = float.MaxValue; // Normally in this case currentRay.distance would return 0, but we want to send a very far distance for the microcontroller
                 Debug.DrawRay(currentRay.origin, currentRay.direction * maxRayDist, Color.red);
                 //Debug.Log(float.MaxValue);
             }
         }
 
-        udp.setFloats(floatBuffer);
+        udp.setDistances(distancesBuffer);
 
         
 
