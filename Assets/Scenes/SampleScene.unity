@@ -1286,14 +1286,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c490d5f552df7544965c0fb8c8b4b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numDrivers: 0
-  conditionSelection: 0
-  minActivationDist: 0
-  maxActivationDist: 0
-  minFreqHz: 0
-  maxFreqHz: 0
-  fixedDutyCycle: 0
-  fixedPeriodMs: 0
+  conditionSelection: 1
+  minActivationDist: 0.01
+  maxActivationDist: 1
+  minFreqHz: 0.4
+  maxFreqHz: 20
+  fixedDutyCycle: 0.5
+  fixedFreqHz: 2
+  just_detectable_intensity: 0.15
 --- !u!1001 &1819641313
 PrefabInstance:
   m_ObjectHideFlags: 0

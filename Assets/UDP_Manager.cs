@@ -9,7 +9,7 @@ using UnityEditor.PackageManager;
 
 public class UDP_Manager : MonoBehaviour
 {
-    float[] float_data = new float[15];
+    float[] float_data = new float[16];
 
     private UdpClient udpClient;
     private IPEndPoint remoteEndPoint;
@@ -24,7 +24,7 @@ public class UDP_Manager : MonoBehaviour
 
     public void setStudyParams(float[] data)
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 8; i++)
         {
             //Offset float data by 8 because it already contains distance values in first 8 entries
             float_data[i+8] = data[i];
@@ -66,6 +66,7 @@ public class UDP_Manager : MonoBehaviour
             "minFreqHz: " + float_data[11] + "\n" +
             "maxFreqHz: " + float_data[12] + "\n" +
             "fixedDutyCycle: " + float_data[13] + "\n" +
-            "fixedPeriodMs: " + float_data[14]);
+            "fixedFreqHz: " + float_data[14] + "\n" +
+            "just_detectable_intensity" + float_data[15]);
     }
 }
