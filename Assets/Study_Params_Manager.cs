@@ -8,7 +8,6 @@ public class Study_Params_Manager : MonoBehaviour
 
     UDP_Manager udp;
 
-    
     [SerializeField]
     [Range(1,2)]
     float conditionSelection;
