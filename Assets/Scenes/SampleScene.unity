@@ -1809,7 +1809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c490d5f552df7544965c0fb8c8b4b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conditionSelection: 0
+  conditionSelection: 1
   minActivationDist: 0.01
   maxActivationDist: 1
   minFreqHz: 0.4
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   requestBodyTrackingPermissionOnStartup: 0
   requestFaceTrackingPermissionOnStartup: 0
   requestEyeTrackingPermissionOnStartup: 0
-  requestScenePermissionOnStartup: 0
+  requestScenePermissionOnStartup: 1
   requestRecordAudioPermissionOnStartup: 0
   requestPassthroughCameraAccessPermissionOnStartup: 0
   _localDimming: 1
