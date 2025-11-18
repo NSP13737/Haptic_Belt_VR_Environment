@@ -1774,7 +1774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxRayDist: 20
-  rayCount: 1
+  rayPrefab: {fileID: 2380857878322462938, guid: 035a22a9e937f3d4a8306b6abc8d91d7, type: 3}
 --- !u!114 &1556322026
 MonoBehaviour:
   m_ObjectHideFlags: 0
