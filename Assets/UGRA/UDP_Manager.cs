@@ -58,7 +58,7 @@ public class UDP_Manager : MonoBehaviour
     {
         byte[] rawDataToSend = ProcessUDP(float_data);
         udpClient.Send(rawDataToSend, rawDataToSend.Length, remoteEndPoint);
-        Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7] + "\n" +
+        /*Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7] + "\n" +
             "conditionSelection: " + float_data[8] + "\n" +
             "minActivationDist: " + float_data[9] + "\n" +
             "maxActivationDist: " + float_data[10] + "\n" +
@@ -66,6 +66,6 @@ public class UDP_Manager : MonoBehaviour
             "maxFreqHz: " + float_data[12] + "\n" +
             "fixedDutyCycle: " + float_data[13] + "\n" +
             "fixedFreqHz: " + float_data[14] + "\n" +
-            "just_detectable_intensity" + float_data[15]);
+            "just_detectable_intensity" + float_data[15]);*/
     }
 }
