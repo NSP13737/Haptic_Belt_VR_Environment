@@ -38,4 +38,9 @@ public class TestCall : MonoBehaviour
             Debug.Log("Function 'ChangeToBlue' was successfully called! Color is now blue.");
         }
     }
+
+    public void TestSlider(float sliderVal)
+    {
+        Debug.Log(sliderVal);
+    }
 }
