@@ -36,6 +36,7 @@ public class headDistanceTracker : MonoBehaviour
 
         if (device.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position))
         {
+            position.y = 0; //remove player vertical head component
             lastPos = position;
             Debug.Log($"Tracking started at: {lastPos}");
         }
@@ -44,13 +45,26 @@ public class headDistanceTracker : MonoBehaviour
         track = true;
     }
 
-    public void EndTrack()
+    public float EndTrack()
     {
         // stop tracking
         track = false;
 
         // whatever you want to do with the total distance now
         Debug.Log($"Total moved distance in local space: {totalMovedDistance}", this);
+        return totalMovedDistance;
+    }
+
+    public void ToggleTrack(bool toTrack)
+    {
+        if (toTrack)
+        {
+            BeginTrack();
+        }
+        else
+        {
+            EndTrack();
+        }
     }
 
     private void Update()
@@ -62,6 +76,7 @@ public class headDistanceTracker : MonoBehaviour
         Vector3 currentPos;
         if (device.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position))
         {
+            position.y = 0; //remove vertical player head movement
             currentPos = position;
         }
         else
