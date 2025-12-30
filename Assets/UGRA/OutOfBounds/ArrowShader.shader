@@ -3,6 +3,7 @@ Shader "Unlit/ArrowShader"
 {
     Properties {
         _Color ("Tint", Color) = (1,1,1,1)
+        _Alpha ("Transparency", Range(0, 1)) = 0.2
         _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader {
@@ -35,6 +36,7 @@ Shader "Unlit/ArrowShader"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float4 _Color;
+            float _Alpha;
 
             v2f vert(appdata_t v) {
                 v2f o;
@@ -45,7 +47,9 @@ Shader "Unlit/ArrowShader"
 
             fixed4 frag(v2f i) : SV_Target {
                 fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+                col.a = _Alpha;
                 return col;
+                
             }
             ENDCG
         }

@@ -32,8 +32,7 @@ public class FadeEffect : MonoBehaviour
     {
         float startAlpha = _material.GetFloat("_Alpha");
         float endAlpha = fadeOut ? 1.0f : 0.0f;
-        float remainingTime
-            = _fadeDelay * Mathf.Abs(endAlpha - startAlpha);
+        float remainingTime = _fadeDelay * Mathf.Abs(endAlpha - startAlpha);
 
         float elapsedTime = 0;
         while (elapsedTime < _fadeDelay)

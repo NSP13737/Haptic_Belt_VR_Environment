@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Distance_Caster : MonoBehaviour
+public class BeltDistanceCaster : MonoBehaviour
 {
 
     [SerializeField]
@@ -13,16 +13,20 @@ public class Distance_Caster : MonoBehaviour
     
     int rayCount = 8;
 
-    LayerMask layerMask; // To make sure casts only collide with walls
     UDP_Manager udp;
 
     GameObject[] rayInstances = new GameObject[8];
 
 
+    private float[] distancesBuffer = new float[8];
+
+
+    private int combinedMask;
 
     private void Awake()
     {
-        layerMask = LayerMask.GetMask("Boundary");
+        combinedMask = (1 << LayerMask.NameToLayer("Boundary"))
+                     | (1 << LayerMask.NameToLayer("realBoundary"));
         udp = GetComponent<UDP_Manager>();
     }
 
@@ -39,7 +43,7 @@ public class Distance_Caster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float[] distancesBuffer = new float[8];
+        
         Vector3 startPoint = transform.position;
         Vector3 endPoint;
         for (int i = 0; i < rayCount; i++)
@@ -52,7 +56,7 @@ public class Distance_Caster : MonoBehaviour
 
             // Raycast
             RaycastHit currentHit;
-            if (Physics.Raycast(currentRay, out currentHit, maxRayDist, layerMask))
+            if (Physics.Raycast(currentRay, out currentHit, maxRayDist, combinedMask))
             {
                 distancesBuffer[i] = currentHit.distance;
                 endPoint = currentHit.point;
