@@ -10,6 +10,8 @@ public class ArrowPoint: MonoBehaviour
 
     void Update()
     {
-        this.transform.LookAt(centerTarget);
+        Vector3 direction = centerTarget.position - transform.position;
+        direction.y = 0; //do not change  "pitch"  of arrow
+        this.transform.rotation = Quaternion.LookRotation(direction);
     }
 }

@@ -14,6 +14,7 @@ Shader "Unlit/ArrowShader"
             Pass Replace
         }
         Cull Off
+        ZTest Always
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
 
