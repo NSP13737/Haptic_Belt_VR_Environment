@@ -7,7 +7,7 @@ public class BeltDistanceCaster : MonoBehaviour
 {
 
     [SerializeField]
-    int maxRayDist;
+    float maxRayDist;
     [SerializeField]
     GameObject rayPrefab;
     
