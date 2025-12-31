@@ -17,10 +17,14 @@ public class EggBasketManager : MonoBehaviour
 
     public List<EggBasketEntry> entries = new List<EggBasketEntry>();
 
+
     private void spawnNextEggBasketPair()
     {
-        Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
+        
+        GameObject egg = Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
         Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
+
+        egg.GetComponent<EggLogic>().SetManager(this);
     }
 
     private void Awake()
@@ -50,25 +54,37 @@ public class EggBasketManager : MonoBehaviour
 
         //start egg basket routine
         spawnNextEggBasketPair();
-        onEggBasketCompletion();
 
     }
 
-    
-    public void onEggBasketCompletion()
+   
+    public void onEggBasketCompletion(float delay)
     {
+        StartCoroutine(CompleteAfterDelayRoutine(delay));
+    }
+
+    private IEnumerator CompleteAfterDelayRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _onEggBasketCompletion();
+    }
+
+    private void _onEggBasketCompletion()
+    {
+        if (entries.Count == 0)
+        {
+            Debug.LogWarning("No egg/basket pairs left to spawn.", this);
+            return;
+        }
+
+
+        entries.RemoveAt(0);
+
+
         if (entries.Count > 0)
         {
-            Debug.Log("Removing!" + "Blah");
-            entries.RemoveAt(0);
             spawnNextEggBasketPair();
         }
-        else
-        {
-            Debug.LogWarning(entries);
-            Debug.LogWarning("You are trying to spawn a new egg basket pair, but there are none left!", this);
-        }
-        
     }
 
     
