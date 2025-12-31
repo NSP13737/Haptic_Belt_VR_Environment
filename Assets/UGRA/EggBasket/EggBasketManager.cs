@@ -25,6 +25,8 @@ public class EggBasketManager : MonoBehaviour
         Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
 
         egg.GetComponent<EggLogic>().SetManager(this);
+
+        //TODO: Start logging
     }
 
     private void Awake()
@@ -71,6 +73,7 @@ public class EggBasketManager : MonoBehaviour
 
     private void _onEggBasketCompletion()
     {
+        //TODO: Stop logging (use id num of entry for logging)
         if (entries.Count == 0)
         {
             Debug.LogWarning("No egg/basket pairs left to spawn.", this);
