@@ -17,18 +17,26 @@ public class EggBasketManager : MonoBehaviour
 
     public List<EggBasketEntry> entries = new List<EggBasketEntry>();
 
+    private void spawnNextEggBasketPair()
+    {
+        Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
+        Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
+    }
+
     private void Awake()
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
             new Vector3(0, 0, 0),
-            new Vector3(0, 1, 0)
+            new Vector3(0, 1, 0),
+            new Vector3(0, 2, 0),
         };
 
         List<Vector3> basketPositions = new List<Vector3>
         {
             new Vector3(0, 0, 1),
-            new Vector3(0, 1, 1)
+            new Vector3(0, 1, 1),
+            new Vector3(0, 2, 1),
         };
 
         for (int i = 0; i < eggPositions.Count; i++)
@@ -42,18 +50,26 @@ public class EggBasketManager : MonoBehaviour
 
         //start egg basket routine
         spawnNextEggBasketPair();
+        onEggBasketCompletion();
 
     }
 
+    
     public void onEggBasketCompletion()
     {
-        entries.RemoveAt(0);
-        spawnNextEggBasketPair();
+        if (entries.Count > 0)
+        {
+            Debug.Log("Removing!" + "Blah");
+            entries.RemoveAt(0);
+            spawnNextEggBasketPair();
+        }
+        else
+        {
+            Debug.LogWarning(entries);
+            Debug.LogWarning("You are trying to spawn a new egg basket pair, but there are none left!", this);
+        }
+        
     }
 
-    private void spawnNextEggBasketPair()
-    {
-        Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
-        Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
-    }
+    
 }
