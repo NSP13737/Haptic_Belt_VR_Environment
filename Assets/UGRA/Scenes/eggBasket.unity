@@ -8194,7 +8194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eggPrefab: {fileID: 2404856191639921729, guid: d494834de4cfcaa4e9f83e41c2fc7810, type: 3}
-  basketPrefab: {fileID: 1648145825353223424, guid: c3218abc4423c34448a9b35374726e74, type: 3}
+  basketPrefab: {fileID: 4053482465071359727, guid: 4cf535cb9ede3b44d945b48006ef1f9b, type: 3}
 --- !u!4 &1840505770
 Transform:
   m_ObjectHideFlags: 0
