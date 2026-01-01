@@ -43,7 +43,7 @@ public class FadeHandler : MonoBehaviour
             FadeEffect.Fade(reverseLogic ? true : false);
         }
 
-        Debug.Log(hitColliders);
+        //Debug.Log(hitColliders);
     }
 
 }
