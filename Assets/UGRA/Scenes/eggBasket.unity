@@ -3969,7 +3969,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2044682828}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1838289475393856967, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
+    - {fileID: 4604000520904607249, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4148778239110795873, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -8193,7 +8195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44a0e52d3ca82541a56ba2318b9387c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eggPrefab: {fileID: 2404856191639921729, guid: d494834de4cfcaa4e9f83e41c2fc7810, type: 3}
+  eggPrefab: {fileID: 3958428390038643411, guid: f14624dd1e7cb9d40ac20b3368d3997f, type: 3}
   basketPrefab: {fileID: 4053482465071359727, guid: 4cf535cb9ede3b44d945b48006ef1f9b, type: 3}
 --- !u!4 &1840505770
 Transform:

@@ -22,7 +22,8 @@ public class EggBasketManager : MonoBehaviour
     {
         
         GameObject egg = Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
-        Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
+        GameObject basket = Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
+        basket.transform.Rotate(new Vector3(-90, 0, 0)); //scuffed way of making sure basket is right side up :)
 
         egg.GetComponent<EggLogic>().SetManager(this);
 
