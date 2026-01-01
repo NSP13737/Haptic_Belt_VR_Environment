@@ -8570,6 +8570,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9e406c433841170478a966988f6ad2e0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 9e406c433841170478a966988f6ad2e0, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.75
@@ -8748,6 +8752,52 @@ RectTransform:
   m_AnchoredPosition: {x: 54.099995, y: -25}
   m_SizeDelta: {x: 102.23001, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1850456676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850456678}
+  - component: {fileID: 1850456677}
+  m_Layer: 0
+  m_Name: EggBasketManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1850456677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850456676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e44a0e52d3ca82541a56ba2318b9387c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eggPrefab: {fileID: 3958428390038643411, guid: f14624dd1e7cb9d40ac20b3368d3997f, type: 3}
+  basketPrefab: {fileID: 4053482465071359727, guid: 4cf535cb9ede3b44d945b48006ef1f9b, type: 3}
+--- !u!4 &1850456678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850456676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.29107988, y: 0.5411726, z: 0.3629861}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1858309454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10161,3 +10211,4 @@ SceneRoots:
   - {fileID: 772217636}
   - {fileID: 1735637832}
   - {fileID: 1303941296}
+  - {fileID: 1850456678}
