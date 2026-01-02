@@ -29,9 +29,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _WindStrength: 0.1
+    - _WindStrength: 0.48
     m_Colors:
     - _BottomColor: {r: 0.059999965, g: 0.36999997, b: 0.06999998, a: 1}
     - _TopColor: {r: 0.56999993, g: 0.8399999, b: 0.31999996, a: 1}
-    - _WindFrequency: {r: 0.05, g: 0.05, b: 0, a: 0}
+    - _WindFrequency: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []

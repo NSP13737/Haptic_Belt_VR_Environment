@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using UnityEngine.Rendering;
+using System.Collections.Generic;
+using System.Drawing;
 
 public class GrassInstancingTest : MonoBehaviour
 {
@@ -9,34 +11,79 @@ public class GrassInstancingTest : MonoBehaviour
     public Material grassMaterial;    // Shader must support GPU Instancing and have it enabled
 
     [Header("Placement")]
-    [SerializeField] [Range(0f,1023f)] private int instanceCount = 512; // <= 1023 per batch
-    [SerializeField] private Vector2 areaExtents = new Vector2(10f, 10f); // XZ extents or XY depending on your plane
+    [SerializeField] private int instanceCount = 512; // <= 1023 per batch
+    [SerializeField] private float areaRadius = 10f;
     [SerializeField] private float groundY = 0f; // If using XZ plane with Y as up
 
     [Header("Variation")]
     [SerializeField] private float minSize = 0.6f;  // Ensure > 0
     [SerializeField] private float maxSize = 1.4f;  // Ensure >= minSize
+    [SerializeField] private float heightScalar = 1f;
     [SerializeField] private float randomRot = 15f;
+    [SerializeField] private float weightingExponent = 1f;
 
-    private Matrix4x4[] matrices;
 
+
+
+    private readonly List<Matrix4x4[]> _batches = new List<Matrix4x4[]>();
+
+    private struct Settings
+    {
+        private int _instanceCount;
+        private float _areaRadius;
+        private float _groundY;
+        private float _minSize;
+        private float _maxSize;
+        private float _heightScalar;
+        private float _randomRot;
+        private float _weightingExponent;
+
+        public Settings(int instanceCount, float areaRadius, float groundY, float minSize, float maxSize, float heightScalar, float randomRot, float weightingExponent)
+        {
+            _instanceCount = instanceCount;
+            _areaRadius = areaRadius;
+            _groundY = groundY;
+            _minSize = minSize;
+            _maxSize = maxSize;
+            _heightScalar = heightScalar;
+            _randomRot = randomRot;
+            _weightingExponent = weightingExponent;
+        }
+
+        public static bool operator !=(Settings s1, Settings s2)
+        {
+            return ((s1._weightingExponent != s2._weightingExponent) || (s1._instanceCount != s2._instanceCount) || (s1._areaRadius != s2._areaRadius) || (s1._groundY != s2._groundY ) || (s1._minSize != s2._minSize) || (s1._maxSize != s2._maxSize) || (s1._heightScalar != s2._heightScalar) || (s1._randomRot != s2._randomRot));
+        }
+        public static bool operator ==(Settings s1, Settings s2)
+        {
+            return ((s1._weightingExponent == s2._weightingExponent) && (s1._instanceCount == s2._instanceCount) && (s1._areaRadius == s2._areaRadius) && (s1._groundY == s2._groundY) && (s1._minSize == s2._minSize) && (s1._maxSize == s2._maxSize) && (s1._heightScalar == s2._heightScalar) && (s1._randomRot == s2._randomRot));
+        }
+    }
+
+    private Settings previousSettings;
     void Awake()
     {
-        // Clamp instance count to API limit
-        instanceCount = Mathf.Clamp(instanceCount, 1, 1023);
+        previousSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightingExponent);
 
+        if (!validateInputs()) return;
+
+        BuildBatches();
+
+    }
+    private bool validateInputs()
+    {
         // Basic validation
         if (grassMesh == null)
         {
             Debug.LogError("GrassInstancingTest: grassMesh is not assigned.");
             enabled = false;
-            return;
+            return false;
         }
         if (grassMaterial == null)
         {
             Debug.LogError("GrassInstancingTest: grassMaterial is not assigned.");
             enabled = false;
-            return;
+            return false;
         }
         if (!grassMaterial.enableInstancing)
         {
@@ -52,33 +99,59 @@ public class GrassInstancingTest : MonoBehaviour
             Debug.LogWarning("GrassInstancingTest: maxSize < minSize. Clamping to minSize.");
             maxSize = minSize;
         }
+        return true;
+    }
 
-        // Precompute transforms
-        matrices = new Matrix4x4[instanceCount];
-        for (int i = 0; i < instanceCount; i++)
+    private void BuildBatches() 
+    {
+        _batches.Clear();
+
+        const int MaxPerBatch = 1023;
+        int remainingInstances = instanceCount;
+
+        while (remainingInstances > 0)
         {
-            // For 2D in XY plane: use (x, y, z=0). For 3D on ground plane XZ: use (x, y=groundY, z).
-            Vector3 pos = new Vector3(
-                Random.Range(-areaExtents.x, areaExtents.x),
-                groundY,                                   // change to Random.Range(-areaExtents.y, areaExtents.y) if using XY
-                Random.Range(-areaExtents.y, areaExtents.y)
-            );
+            int countThisBatch = Mathf.Min(remainingInstances, MaxPerBatch);
+            var matricies = new Matrix4x4[countThisBatch];
 
-            float s = Random.Range(minSize, maxSize);      // uniform positive scale
-            Vector3 scale = new Vector3(s, s, 1f);         // keep Z=1f to avoid zero-scale singularity for 2D quads
-
-
-            Quaternion rot = Quaternion.Euler(Random.Range(-randomRot, randomRot), Random.Range(0f, 360f), Random.Range(-randomRot, randomRot));
-
-
-            matrices[i] = Matrix4x4.TRS(pos, rot, scale);
+            for (int i = 0; i < countThisBatch; i++)
+            {
+                float weight = Mathf.Pow(Random.value, weightingExponent);
+                Vector2 p = Random.insideUnitCircle * (areaRadius*weight);
+                Vector3 pos = new Vector3(p.x, groundY, p.y);
+                float s = Random.Range(minSize, maxSize);
+                Vector3 scale = new Vector3(s, s*heightScalar, s);
+                Quaternion rot = Quaternion.Euler(Random.Range(-randomRot, randomRot), Random.Range(0f,360f), Random.Range(-randomRot, randomRot));
+                matricies[i] = Matrix4x4.TRS(pos, rot, scale);
+            }
+            _batches.Add(matricies);
+            remainingInstances -= countThisBatch;
         }
+
     }
 
     void Update()
     {
+        Settings currentSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightingExponent);
+        if (currentSettings != previousSettings)
+        {
+            Awake(); //recompute batches if we change vars in editor
+        }
+
         // Draw all instances each frame
-        Graphics.DrawMeshInstanced(grassMesh, 0, grassMaterial, matrices, instanceCount,
-            null, ShadowCastingMode.Off, false, gameObject.layer);
+        for (int i = 0; i < _batches.Count; i++)
+        {
+            var matrices = _batches[i];
+            Graphics.DrawMeshInstanced(
+                grassMesh,
+                submeshIndex: 0,
+                grassMaterial,
+                matrices,
+                matrices.Length,
+                properties: null,
+                castShadows: ShadowCastingMode.Off,
+                receiveShadows: false,
+                layer: gameObject.layer);
+        }
     }
 }
