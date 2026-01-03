@@ -20,7 +20,7 @@ public class GrassInstancingTest : MonoBehaviour
     [SerializeField] private float maxSize = 1.4f;  // Ensure >= minSize
     [SerializeField] private float heightScalar = 1f;
     [SerializeField] private float randomRot = 15f;
-    [SerializeField] private float weightingExponent = 1f;
+    [SerializeField] private float weightDistribution = 1f;
 
 
 
@@ -36,9 +36,9 @@ public class GrassInstancingTest : MonoBehaviour
         private float _maxSize;
         private float _heightScalar;
         private float _randomRot;
-        private float _weightingExponent;
+        private float _weightDistribution;
 
-        public Settings(int instanceCount, float areaRadius, float groundY, float minSize, float maxSize, float heightScalar, float randomRot, float weightingExponent)
+        public Settings(int instanceCount, float areaRadius, float groundY, float minSize, float maxSize, float heightScalar, float randomRot, float weightDistribution)
         {
             _instanceCount = instanceCount;
             _areaRadius = areaRadius;
@@ -47,23 +47,23 @@ public class GrassInstancingTest : MonoBehaviour
             _maxSize = maxSize;
             _heightScalar = heightScalar;
             _randomRot = randomRot;
-            _weightingExponent = weightingExponent;
+            _weightDistribution = weightDistribution;
         }
 
         public static bool operator !=(Settings s1, Settings s2)
         {
-            return ((s1._weightingExponent != s2._weightingExponent) || (s1._instanceCount != s2._instanceCount) || (s1._areaRadius != s2._areaRadius) || (s1._groundY != s2._groundY ) || (s1._minSize != s2._minSize) || (s1._maxSize != s2._maxSize) || (s1._heightScalar != s2._heightScalar) || (s1._randomRot != s2._randomRot));
+            return ((s1._weightDistribution != s2._weightDistribution) || (s1._instanceCount != s2._instanceCount) || (s1._areaRadius != s2._areaRadius) || (s1._groundY != s2._groundY ) || (s1._minSize != s2._minSize) || (s1._maxSize != s2._maxSize) || (s1._heightScalar != s2._heightScalar) || (s1._randomRot != s2._randomRot));
         }
         public static bool operator ==(Settings s1, Settings s2)
         {
-            return ((s1._weightingExponent == s2._weightingExponent) && (s1._instanceCount == s2._instanceCount) && (s1._areaRadius == s2._areaRadius) && (s1._groundY == s2._groundY) && (s1._minSize == s2._minSize) && (s1._maxSize == s2._maxSize) && (s1._heightScalar == s2._heightScalar) && (s1._randomRot == s2._randomRot));
+            return ((s1._weightDistribution == s2._weightDistribution) && (s1._instanceCount == s2._instanceCount) && (s1._areaRadius == s2._areaRadius) && (s1._groundY == s2._groundY) && (s1._minSize == s2._minSize) && (s1._maxSize == s2._maxSize) && (s1._heightScalar == s2._heightScalar) && (s1._randomRot == s2._randomRot));
         }
     }
 
     private Settings previousSettings;
     void Awake()
     {
-        previousSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightingExponent);
+        previousSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightDistribution);
 
         if (!validateInputs()) return;
 
@@ -116,7 +116,7 @@ public class GrassInstancingTest : MonoBehaviour
 
             for (int i = 0; i < countThisBatch; i++)
             {
-                float weight = Mathf.Pow(Random.value, weightingExponent);
+                float weight = weightDistribution * ((Random.value + Random.value + Random.value) / 3.0f);
                 Vector2 p = Random.insideUnitCircle * (areaRadius*weight);
                 Vector3 pos = new Vector3(p.x, groundY, p.y);
                 float s = Random.Range(minSize, maxSize);
@@ -132,7 +132,7 @@ public class GrassInstancingTest : MonoBehaviour
 
     void Update()
     {
-        Settings currentSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightingExponent);
+        Settings currentSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightDistribution);
         if (currentSettings != previousSettings)
         {
             Awake(); //recompute batches if we change vars in editor
