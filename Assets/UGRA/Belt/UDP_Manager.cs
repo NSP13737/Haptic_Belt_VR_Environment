@@ -8,6 +8,7 @@ using System.Text;
 
 public class UDP_Manager : MonoBehaviour
 {
+    //TODO: this should probably be static so that our params save between scenes, but I'm can't test this yet, so I'm leaving this comment here
     float[] float_data = new float[16];
 
     private UdpClient udpClient;

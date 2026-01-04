@@ -34,16 +34,20 @@ public class EggBasketManager : MonoBehaviour
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
-            new Vector3(0, 0, 0),
-            new Vector3(0, 1, 0),
-            new Vector3(0, 2, 0),
+            new Vector3(0.645f, 0.2f, 3.245f),
+            new Vector3(3.973f, 0.2f, 0.2567f),
+            new Vector3(0.4777f, 0.2f, 0.4034f),
+            new Vector3(4.0678f, 0.2f, 5.68f),
+            new Vector3(0.821f, 0.2f, 5.177f),
         };
 
         List<Vector3> basketPositions = new List<Vector3>
         {
-            new Vector3(0, 0, 1),
-            new Vector3(0, 1, 1),
-            new Vector3(0, 2, 1),
+            new Vector3(0.287f, 0.224f, 5.896f),
+            new Vector3(1.77f, 0.224f, 3.14f),
+            new Vector3(4.1067f, 0.224f, 2.216f),
+            new Vector3(0.4864f, 0.224f, 1.8336f),
+            new Vector3(2.076f, 0.224f, 0.3377f),
         };
 
         for (int i = 0; i < eggPositions.Count; i++)
