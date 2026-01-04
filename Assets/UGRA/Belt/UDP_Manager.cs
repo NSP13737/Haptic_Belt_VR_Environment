@@ -30,6 +30,24 @@ public class UDP_Manager : MonoBehaviour
             float_data[i+8] = data[i];
         }
     }
+    public void adjustJustDetectableIntensity(float minIntensityDelta)
+    {
+        float tmp = float_data[15] + minIntensityDelta;
+        if (tmp < 0)
+        {
+            float_data[15] = 0f;
+        }
+        else if (tmp > 1)
+        {
+            float_data[15] = 1;
+        }
+        else
+        {
+            float_data[15] = tmp;
+        }
+
+
+    }
 
     byte[] ProcessUDP(float[] dists)
     {

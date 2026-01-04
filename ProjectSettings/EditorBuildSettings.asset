@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/UGRA/Scenes/grassSceneTemplate.unity
     guid: 14b8a118eeac48642b1528243e918a17
   - enabled: 1
-    path: Assets/UGRA/Scenes/mainExperimentalScene.unity
+    path: Assets/UGRA/Scenes/experimentalScene.unity
     guid: b7c4270cdb9b9164ea853425daebb889
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b7938752dc303504c97daf8ada4af725, type: 2}

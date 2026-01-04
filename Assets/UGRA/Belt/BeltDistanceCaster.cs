@@ -23,6 +23,8 @@ public class BeltDistanceCaster : MonoBehaviour
 
     private int combinedMask;
 
+    private bool getRealtimeDistances = true;
+
     private void Awake()
     {
         combinedMask = (1 << LayerMask.NameToLayer("Boundary"))
@@ -38,12 +40,29 @@ public class BeltDistanceCaster : MonoBehaviour
             GameObject rayInstance = Instantiate(rayPrefab, transform);
             rayInstances[i] = rayInstance;
         }
+
     }
+
+    public void disableRealtimeDistance(bool disable)
+    {
+        getRealtimeDistances = !disable;
+    }
+
+    
 
     // Update is called once per frame
     void Update()
     {
+        if (getRealtimeDistances)
+        {
+            getAndSendDistances();
+        }
+        else { return; }
         
+    }
+
+    private void getAndSendDistances()
+    {
         Vector3 startPoint = transform.position;
         Vector3 endPoint;
         for (int i = 0; i < rayCount; i++)
@@ -75,9 +94,5 @@ public class BeltDistanceCaster : MonoBehaviour
         }
 
         udp.setDistances(distancesBuffer);
-
-        
-
-      
     }
 }

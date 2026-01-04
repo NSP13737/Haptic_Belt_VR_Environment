@@ -43,4 +43,6 @@ public class BoundaryRenderControl : MonoBehaviour
             }
         }
     }
+
+    public void changeRenderBool(bool render) { renderBoundaries = render; }
 }
