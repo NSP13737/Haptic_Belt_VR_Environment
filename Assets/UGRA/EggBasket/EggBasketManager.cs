@@ -14,20 +14,23 @@ public class EggBasketManager : MonoBehaviour
     [SerializeField] private Event nextEggBasketPair;
     [SerializeField] private GameObject eggPrefab;
     [SerializeField] private GameObject basketPrefab;
+    [SerializeField] private logTest studyLogger;
 
-    public List<EggBasketEntry> entries = new List<EggBasketEntry>();
+    public List<EggBasketEntry> eggBasketPairEntries = new List<EggBasketEntry>();
+    public float logStartTime;
 
 
     private void spawnNextEggBasketPair()
     {
         
-        GameObject egg = Instantiate(eggPrefab, entries[0].eggPos, Quaternion.identity);
-        GameObject basket = Instantiate(basketPrefab, entries[0].basketPos, Quaternion.identity);
+        GameObject egg = Instantiate(eggPrefab, eggBasketPairEntries[0].eggPos, Quaternion.identity);
+        GameObject basket = Instantiate(basketPrefab, eggBasketPairEntries[0].basketPos, Quaternion.identity);
         basket.transform.Rotate(new Vector3(-90, 0, 0)); //scuffed way of making sure basket is right side up :)
 
         egg.GetComponent<EggLogic>().SetManager(this);
 
         //TODO: Start logging
+        studyLogger.startLogging(eggBasketPairEntries[0].id);
     }
 
     private void Awake()
@@ -56,7 +59,7 @@ public class EggBasketManager : MonoBehaviour
             entry.id = i;
             entry.eggPos = eggPositions[i];
             entry.basketPos = basketPositions[i];
-            entries.Add(entry);
+            eggBasketPairEntries.Add(entry);
         }
 
         //start egg basket routine
@@ -79,17 +82,17 @@ public class EggBasketManager : MonoBehaviour
     private void _onEggBasketCompletion()
     {
         //TODO: Stop logging (use id num of entry for logging)
-        if (entries.Count == 0)
+        if (eggBasketPairEntries.Count == 0)
         {
             Debug.LogWarning("No egg/basket pairs left to spawn.", this);
             return;
         }
 
 
-        entries.RemoveAt(0);
+        eggBasketPairEntries.RemoveAt(0);
 
 
-        if (entries.Count > 0)
+        if (eggBasketPairEntries.Count > 0)
         {
             spawnNextEggBasketPair();
         }

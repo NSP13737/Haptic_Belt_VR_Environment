@@ -40,6 +40,9 @@ using UnityEngine;
 public class logTest : MonoBehaviour
 {
     private string logFolder;
+    private string logFileName = "logDump";
+    private float logStartTime;
+    private int entryNum;
 
     void Start()
     {
@@ -50,12 +53,39 @@ public class logTest : MonoBehaviour
             Directory.CreateDirectory(logFolder);
         }
 
-        WriteLog("testing01.txt", "howdy");
+        //WriteLog("testing01.txt", "howdy");
     }
 
-    public void WriteLog(string fileName, string content)
+    public void setLogFileName(string logFileName)
     {
-        string filePath = Path.Combine(logFolder, fileName);
+        this.logFileName = logFileName;
+    }
+
+    public void startLogging(int entryNum)
+    {
+        this.entryNum = entryNum;
+        logStartTime = 0;
+        startHeadCollisionTracker();
+    }
+    public void stopLogging()
+    {
+        float eggToBasketTime = Time.time - logStartTime;
+        int numCollisions = stopHeadCollisionTracker();
+        string content = $"{entryNum},{eggToBasketTime},{numCollisions}, {pathLength}";
+        WriteLog(content);
+    }
+    private void startHeadCollisionTracker()
+    {
+        ;
+    }
+    private int stopHeadCollisionTracker()
+    {
+        return -1;
+    }
+
+    public void WriteLog(string content)
+    {
+        string filePath = Path.Combine(logFolder, logFileName);
 
         using (StreamWriter writer = new StreamWriter(filePath, true))
         {
