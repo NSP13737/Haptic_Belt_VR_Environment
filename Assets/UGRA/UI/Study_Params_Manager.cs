@@ -153,4 +153,21 @@ public class Study_Params_Manager : MonoBehaviour
         justDetectableIntensity = Mathf.Lerp(justDetectableIntensity_sliderMin, justDetectableIntensity_sliderMax, normalizedVal);
         onChangeJustDetectableIntensity?.Invoke(justDetectableIntensity);
     }
+    public void DeltaChangeJustDetectableIntensity(float instensityDelta)
+    {
+        float tmp = udp.getParam_JustNoticableIntensity() + instensityDelta;
+
+        //clamp tmp to normalized range
+        if (tmp < 0)
+        {
+            tmp = 0f;
+        }
+        else if (tmp > 1)
+        {
+            tmp = 1;
+        }
+        
+        justDetectableIntensity = Mathf.Lerp(justDetectableIntensity_sliderMin, justDetectableIntensity_sliderMax, tmp);
+        onChangeJustDetectableIntensity?.Invoke(justDetectableIntensity);
+    }
 }

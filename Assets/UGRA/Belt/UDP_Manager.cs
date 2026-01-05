@@ -30,23 +30,15 @@ public class UDP_Manager : MonoBehaviour
             float_data[i+8] = data[i];
         }
     }
-    public void adjustJustDetectableIntensity(float minIntensityDelta)
+
+
+    public float getParam_MaxDistance()
     {
-        float tmp = float_data[15] + minIntensityDelta;
-        if (tmp < 0)
-        {
-            float_data[15] = 0f;
-        }
-        else if (tmp > 1)
-        {
-            float_data[15] = 1;
-        }
-        else
-        {
-            float_data[15] = tmp;
-        }
-
-
+        return float_data[10];
+    }
+    public float getParam_JustNoticableIntensity()
+    {
+        return float_data[15];
     }
 
     byte[] ProcessUDP(float[] dists)
@@ -77,14 +69,14 @@ public class UDP_Manager : MonoBehaviour
     {
         byte[] rawDataToSend = ProcessUDP(float_data);
         udpClient.Send(rawDataToSend, rawDataToSend.Length, remoteEndPoint);
-        /*Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7] + "\n" +
-            "conditionSelection: " + float_data[8] + "\n" +
-            "minActivationDist: " + float_data[9] + "\n" +
-            "maxActivationDist: " + float_data[10] + "\n" +
-            "minFreqHz: " + float_data[11] + "\n" +
-            "maxFreqHz: " + float_data[12] + "\n" +
-            "fixedDutyCycle: " + float_data[13] + "\n" +
-            "fixedFreqHz: " + float_data[14] + "\n" +
-            "just_detectable_intensity" + float_data[15]);*/
+        //Debug.Log(float_data[0] + " : " + float_data[1] + " : " + float_data[2] + " : " + float_data[3] + " : " + float_data[4] + " : " + float_data[5] + " : " + float_data[6] + " : " + float_data[7] + "\n" +
+        //    "conditionSelection: " + float_data[8] + "\n" +
+        //    "minActivationDist: " + float_data[9] + "\n" +
+        //    "maxActivationDist: " + float_data[10] + "\n" +
+        //    "minFreqHz: " + float_data[11] + "\n" +
+        //    "maxFreqHz: " + float_data[12] + "\n" +
+        //    "fixedDutyCycle: " + float_data[13] + "\n" +
+        //    "fixedFreqHz: " + float_data[14] + "\n" +
+        //    "just_detectable_intensity" + float_data[15]);
     }
 }
