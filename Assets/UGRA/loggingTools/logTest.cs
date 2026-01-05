@@ -44,6 +44,8 @@ public class logTest : MonoBehaviour
     private float logStartTime;
     private int entryNum;
 
+    private headTrackerTools headTracker;
+
     void Start()
     {
         logFolder = Application.persistentDataPath + "/StudyLogs/";
@@ -61,27 +63,22 @@ public class logTest : MonoBehaviour
         this.logFileName = logFileName;
     }
 
-    public void startLogging(int entryNum)
+    public void startSegmentLogging(int entryNum)
     {
         this.entryNum = entryNum;
         logStartTime = 0;
-        startHeadCollisionTracker();
+        headTracker.startHeadCollisionTracker();
+        headTracker.BeginTrack();
     }
-    public void stopLogging()
+    public void stopSegmentLogging()
     {
         float eggToBasketTime = Time.time - logStartTime;
-        int numCollisions = stopHeadCollisionTracker();
-        string content = $"{entryNum},{eggToBasketTime},{numCollisions}, {pathLength}";
+        int numCollisions = headTracker.stopHeadCollisionTracker();
+        float distanceTraveled = headTracker.EndTrack();
+        string content = $"{entryNum},{eggToBasketTime},{numCollisions},{distanceTraveled}";
         WriteLog(content);
     }
-    private void startHeadCollisionTracker()
-    {
-        ;
-    }
-    private int stopHeadCollisionTracker()
-    {
-        return -1;
-    }
+    
 
     public void WriteLog(string content)
     {

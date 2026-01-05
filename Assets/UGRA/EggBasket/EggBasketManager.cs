@@ -30,7 +30,7 @@ public class EggBasketManager : MonoBehaviour
         egg.GetComponent<EggLogic>().SetManager(this);
 
         //TODO: Start logging
-        studyLogger.startLogging(eggBasketPairEntries[0].id);
+        studyLogger.startSegmentLogging(eggBasketPairEntries[0].id);
     }
 
     private void Awake()
@@ -90,6 +90,7 @@ public class EggBasketManager : MonoBehaviour
 
 
         eggBasketPairEntries.RemoveAt(0);
+        studyLogger.stopSegmentLogging();
 
 
         if (eggBasketPairEntries.Count > 0)
