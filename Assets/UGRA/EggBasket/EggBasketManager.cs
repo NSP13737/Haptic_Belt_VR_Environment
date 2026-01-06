@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EggBasketEntry
@@ -15,13 +17,15 @@ public class EggBasketManager : MonoBehaviour
     [SerializeField] private GameObject eggPrefab;
     [SerializeField] private GameObject basketPrefab;
     [SerializeField] private loggingManager studyLogger;
+    [SerializeField] private GameObject studyDoneUI;
+    [SerializeField] private GameObject playerHeadAnchor;
 
     public List<EggBasketEntry> eggBasketPairEntries = new List<EggBasketEntry>();
 
 
     
 
-    private void Start()
+    private void Awake()
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
@@ -49,6 +53,8 @@ public class EggBasketManager : MonoBehaviour
             entry.basketPos = basketPositions[i];
             eggBasketPairEntries.Add(entry);
         }
+
+        studyDoneUI.transform.position = new Vector3(0, 400, 0); // start the done UI up and out of the way until we need it
 
 
     }
@@ -85,7 +91,6 @@ public class EggBasketManager : MonoBehaviour
 
     private void _onEggBasketCompletion()
     {
-        //TODO: Stop logging (use id num of entry for logging)
         if (eggBasketPairEntries.Count == 0)
         {
             Debug.LogWarning("No egg/basket pairs left to spawn.", this);
@@ -101,6 +106,18 @@ public class EggBasketManager : MonoBehaviour
         {
             spawnNextEggBasketPair();
         }
+        else if (eggBasketPairEntries.Count == 0)
+        {
+            LoadStudyDoneUI();
+        }
+    }
+
+    private void LoadStudyDoneUI()
+    {
+        studyDoneUI.transform.position = playerHeadAnchor.transform.TransformPoint(new Vector3(0, 0, 1)); //place ui right in front of players head relative to where they are 
+        studyDoneUI.transform.rotation = playerHeadAnchor.transform.rotation;
+        studyDoneUI.transform.SetParent(playerHeadAnchor.transform);
+        Debug.LogError("LOAD STUDY STUFF DONE");
     }
 
     

@@ -43,7 +43,6 @@ public class HeadTrackerTools : MonoBehaviour
         {
             position.y = 0; //remove player vertical head component
             lastPos = position;
-            Debug.LogError($"Tracking started at: {lastPos}");
         }
         else
         {
@@ -60,7 +59,7 @@ public class HeadTrackerTools : MonoBehaviour
         track = false;
 
         // whatever you want to do with the total distance now
-        Debug.Log($"Total moved distance in local space: {totalMovedDistance}", this);
+        //Debug.Log($"Total moved distance in local space: {totalMovedDistance}", this);
         return totalMovedDistance;
     }
 
