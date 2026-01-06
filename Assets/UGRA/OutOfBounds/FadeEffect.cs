@@ -24,7 +24,7 @@ public class FadeEffect : MonoBehaviour
         _isFadingOut = fadeOut;
         StopAllCoroutines();
         string val = _isFadingOut ? "OUT" : "in";
-        Debug.Log($"Starting fade {val} coroutine");
+        //Debug.Log($"Starting fade {val} coroutine");
         StartCoroutine(PlayEffect(fadeOut));
     }
 

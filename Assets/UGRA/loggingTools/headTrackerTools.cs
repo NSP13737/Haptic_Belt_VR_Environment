@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class headTrackerTools : MonoBehaviour
+public class HeadTrackerTools : MonoBehaviour
 {
     // Source - https://stackoverflow.com/a
     // Posted by derHugo, modified by community. See post 'Timeline' for change history
@@ -11,8 +11,11 @@ public class headTrackerTools : MonoBehaviour
     // has been modified significantly by Nathan Phillips
 
     [SerializeField]
-    float deadzone = 0.01f; // 10 millimeters
+    float movementTrackingDeadzone = 0.01f; // 10 millimeters
+    [Tooltip("This can be anything on the head, but CenterEyeAnchor probably is best?")]
     [SerializeField] private GameObject head;
+    [Tooltip("This tells us how long we should wait before checking for collisions again (like i-frames)")]
+    [SerializeField] private float collisionBufferTime;
 
     // Stores the overall moved distance
     private float totalMovedDistance;
@@ -20,14 +23,14 @@ public class headTrackerTools : MonoBehaviour
 
     // flag to start and stop tracking
     // Could also use a Coroutine if that fits you better
-    private bool track;
+    private bool track = false;
 
     // Store position of last frame
     private Vector3 lastPos;
 
     private UnityEngine.XR.InputDevice device;
 
-    public void BeginTrack()
+    public void BeginDistanceTracking()
     {
         // reset total value
         totalMovedDistance = 0;
@@ -40,14 +43,18 @@ public class headTrackerTools : MonoBehaviour
         {
             position.y = 0; //remove player vertical head component
             lastPos = position;
-            Debug.Log($"Tracking started at: {lastPos}");
+            Debug.LogError($"Tracking started at: {lastPos}");
+        }
+        else
+        {
+            Debug.LogError("Could not get device position to begin head distance tracking", this);
         }
 
-        // start tracking
-        track = true;
+            // start tracking
+            track = true;
     }
 
-    public float EndTrack()
+    public float EndDistanceTracking()
     {
         // stop tracking
         track = false;
@@ -57,33 +64,42 @@ public class headTrackerTools : MonoBehaviour
         return totalMovedDistance;
     }
 
-    public void ToggleTrack(bool toTrack)
+    public void ToggleDistanceTracking(bool toTrack)
     {
         if (toTrack)
         {
-            BeginTrack();
+            BeginDistanceTracking();
         }
         else
         {
-            EndTrack();
+            EndDistanceTracking();
         }
     }
 
-    public void startHeadCollisionTracker()
+    public void StartHeadCollisionTracker()
     {
         collisionCount = 0;
     }
-    public int stopHeadCollisionTracker()
+    public int StopHeadCollisionTracker()
     {
         return collisionCount;
     }
 
-    private void incrementCollisionCount(GameObject obj)
+    private float lastCollisionTime;
+    private void IncrementCollisionCount(GameObject obj)
     {
-        if (obj.layer == LayerMask.NameToLayer("Boundary") || obj.layer == LayerMask.NameToLayer("RealBoundary"))
+
+        if (obj.layer == LayerMask.NameToLayer("Boundary") || obj.layer == LayerMask.NameToLayer("realBoundary"))
         {
-            collisionCount++;
+            if ((Time.time - lastCollisionTime) >= collisionBufferTime)
+            {
+                collisionCount++;
+                lastCollisionTime = Time.time;
+            }
+            
+            
         }
+        
     }
 
     private void Start()
@@ -102,19 +118,23 @@ public class headTrackerTools : MonoBehaviour
         {
             Debug.LogError("The head does not have a collider and will not log any collisions for logging");
         }
+        if (!head.TryGetComponent<Rigidbody>(out Rigidbody _))
+        {
+            Debug.LogError("The head does not have a rigid body component (required for collision count tracking)");
+        }
 
-        broadcaster.OnHeadCollide += incrementCollisionCount;
+        broadcaster.OnHeadCollide += IncrementCollisionCount;
         
     }
     private void Update()
     {
+        // If not tracking do nothing
+        if (!track) return;
         updateTotalMoveDist();
     }
 
     private void updateTotalMoveDist()
     {
-        // If not tracking do nothing
-        if (!track) return;
 
         // get current hmd position
         Vector3 currentPos;
@@ -131,8 +151,8 @@ public class headTrackerTools : MonoBehaviour
         // Get distance moved since last frame
         float thisFrameDistance = Vector3.Distance(currentPos, lastPos);
 
-        // sum it up to the total value if change is greater than deadzone
-        if (thisFrameDistance > deadzone)
+        // sum it up to the total value if change is greater than movementTrackingDeadzone
+        if (thisFrameDistance > movementTrackingDeadzone)
         {
             totalMovedDistance += thisFrameDistance;
             // update the last position

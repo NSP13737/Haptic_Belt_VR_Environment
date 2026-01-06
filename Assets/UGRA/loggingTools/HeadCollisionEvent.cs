@@ -6,8 +6,8 @@ public class HeadCollisionEvent : MonoBehaviour
 {
     public System.Action<GameObject> OnHeadCollide;
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider collider)
     {
-        OnHeadCollide?.Invoke(collision.gameObject);
+        OnHeadCollide?.Invoke(collider.gameObject);
     }
 }

@@ -14,26 +14,14 @@ public class EggBasketManager : MonoBehaviour
     [SerializeField] private Event nextEggBasketPair;
     [SerializeField] private GameObject eggPrefab;
     [SerializeField] private GameObject basketPrefab;
-    [SerializeField] private logTest studyLogger;
+    [SerializeField] private loggingManager studyLogger;
 
     public List<EggBasketEntry> eggBasketPairEntries = new List<EggBasketEntry>();
-    public float logStartTime;
 
 
-    private void spawnNextEggBasketPair()
-    {
-        
-        GameObject egg = Instantiate(eggPrefab, eggBasketPairEntries[0].eggPos, Quaternion.identity);
-        GameObject basket = Instantiate(basketPrefab, eggBasketPairEntries[0].basketPos, Quaternion.identity);
-        basket.transform.Rotate(new Vector3(-90, 0, 0)); //scuffed way of making sure basket is right side up :)
+    
 
-        egg.GetComponent<EggLogic>().SetManager(this);
-
-        //TODO: Start logging
-        studyLogger.startSegmentLogging(eggBasketPairEntries[0].id);
-    }
-
-    private void Awake()
+    private void Start()
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
@@ -62,12 +50,28 @@ public class EggBasketManager : MonoBehaviour
             eggBasketPairEntries.Add(entry);
         }
 
-        //start egg basket routine
-        spawnNextEggBasketPair();
 
     }
 
-   
+    public void startEggBasketFromUI(GameObject uiGO)
+    {
+        spawnNextEggBasketPair();
+        uiGO.SetActive(false);
+    }
+
+    private void spawnNextEggBasketPair()
+    {
+
+        GameObject egg = Instantiate(eggPrefab, eggBasketPairEntries[0].eggPos, Quaternion.identity);
+        GameObject basket = Instantiate(basketPrefab, eggBasketPairEntries[0].basketPos, Quaternion.identity);
+        basket.transform.Rotate(new Vector3(-90, 0, 0)); //scuffed way of making sure basket is right side up :)
+
+        egg.GetComponent<EggLogic>().SetManager(this); // this makes sure we are explicit about what the script is referencing since instanciating stuff can sometimes make this weird
+
+        //TODO: Start logging
+        studyLogger.StartSegmentLogging(eggBasketPairEntries[0].id);
+    }
+
     public void onEggBasketCompletion(float delay)
     {
         StartCoroutine(CompleteAfterDelayRoutine(delay));
@@ -90,7 +94,7 @@ public class EggBasketManager : MonoBehaviour
 
 
         eggBasketPairEntries.RemoveAt(0);
-        studyLogger.stopSegmentLogging();
+        studyLogger.StopSegmentLogging();
 
 
         if (eggBasketPairEntries.Count > 0)

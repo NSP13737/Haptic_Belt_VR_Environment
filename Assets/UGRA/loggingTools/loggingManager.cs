@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-public class logTest : MonoBehaviour
+public class loggingManager : MonoBehaviour
 {
     private string logFolder;
 
@@ -37,14 +37,14 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class logTest : MonoBehaviour
+public class loggingManager : MonoBehaviour
 {
     private string logFolder;
-    private string logFileName = "logDump";
+    private string logFileName = "logDump.log";
     private float logStartTime;
     private int entryNum;
 
-    private headTrackerTools headTracker;
+    public HeadTrackerTools headTracker;
 
     void Start()
     {
@@ -58,23 +58,23 @@ public class logTest : MonoBehaviour
         //WriteLog("testing01.txt", "howdy");
     }
 
-    public void setLogFileName(string logFileName)
+    public void SetLogFileName(string logFileName)
     {
         this.logFileName = logFileName;
     }
 
-    public void startSegmentLogging(int entryNum)
+    public void StartSegmentLogging(int entryNum)
     {
         this.entryNum = entryNum;
-        logStartTime = 0;
-        headTracker.startHeadCollisionTracker();
-        headTracker.BeginTrack();
+        logStartTime = Time.time;
+        headTracker.StartHeadCollisionTracker();
+        headTracker.BeginDistanceTracking();
     }
-    public void stopSegmentLogging()
+    public void StopSegmentLogging()
     {
         float eggToBasketTime = Time.time - logStartTime;
-        int numCollisions = headTracker.stopHeadCollisionTracker();
-        float distanceTraveled = headTracker.EndTrack();
+        int numCollisions = headTracker.StopHeadCollisionTracker();
+        float distanceTraveled = headTracker.EndDistanceTracking();
         string content = $"{entryNum},{eggToBasketTime},{numCollisions},{distanceTraveled}";
         WriteLog(content);
     }
