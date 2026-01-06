@@ -6,7 +6,6 @@ public class BoundaryRenderControl : MonoBehaviour
 {
 
     private List<GameObject> allBoundaryGOs = new List<GameObject>();
-    private int combinedMask;
 
     [SerializeField] public bool renderBoundaries = false;
     
