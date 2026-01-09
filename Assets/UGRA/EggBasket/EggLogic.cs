@@ -13,14 +13,13 @@ public class EggLogic : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (triggered) return;
-        if (!other.CompareTag("Basket")) return;
+        if (!other.CompareTag("EggCollectionTrigger")) return;
 
         triggered = true;
 
         Destroy(this.gameObject, 0.5f);
-        Destroy(other.gameObject, 0.5f);
 
-        manager.onEggBasketCompletion(0.5f);
+        manager.onEggCompletion(0.5f);
         
     }
 }

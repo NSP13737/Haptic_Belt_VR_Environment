@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-public class logTest : MonoBehaviour
+public class loggingManager : MonoBehaviour
 {
     private string logFolder;
 
@@ -37,9 +37,14 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class logTest : MonoBehaviour
+public class loggingManager : MonoBehaviour
 {
     private string logFolder;
+    private string logFileName = "logDump.log";
+    private float logStartTime;
+    private int entryNum;
+
+    public HeadTrackerTools headTracker;
 
     void Start()
     {
@@ -50,12 +55,34 @@ public class logTest : MonoBehaviour
             Directory.CreateDirectory(logFolder);
         }
 
-        WriteLog("testing01.txt", "howdy");
+        //WriteLog("testing01.txt", "howdy");
     }
 
-    public void WriteLog(string fileName, string content)
+    public void SetLogFileName(string logFileName)
     {
-        string filePath = Path.Combine(logFolder, fileName);
+        this.logFileName = logFileName;
+    }
+
+    public void StartSegmentLogging(int entryNum)
+    {
+        this.entryNum = entryNum;
+        logStartTime = Time.time;
+        headTracker.StartHeadCollisionTracker();
+        headTracker.BeginDistanceTracking();
+    }
+    public void StopSegmentLogging()
+    {
+        float eggToBasketTime = Time.time - logStartTime;
+        int numCollisions = headTracker.StopHeadCollisionTracker();
+        float distanceTraveled = headTracker.EndDistanceTracking();
+        string content = $"{entryNum},{eggToBasketTime},{numCollisions},{distanceTraveled}";
+        WriteLog(content);
+    }
+    
+
+    public void WriteLog(string content)
+    {
+        string filePath = Path.Combine(logFolder, logFileName);
 
         using (StreamWriter writer = new StreamWriter(filePath, true))
         {
