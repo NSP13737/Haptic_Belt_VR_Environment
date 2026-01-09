@@ -4,23 +4,21 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class EggBasketEntry
+public class EggEntry
 {
     public int id;
     public Vector3 eggPos;
-    public Vector3 basketPos;
 }
 public class EggBasketManager : MonoBehaviour
 {
 
-    [SerializeField] private Event nextEggBasketPair;
     [SerializeField] private GameObject eggPrefab;
     [SerializeField] private GameObject basketPrefab;
     [SerializeField] private loggingManager studyLogger;
     [SerializeField] private GameObject studyDoneUI;
     [SerializeField] private GameObject playerHeadAnchor;
 
-    public List<EggBasketEntry> eggBasketPairEntries = new List<EggBasketEntry>();
+    public List<EggEntry> eggEntries = new List<EggEntry>();
 
 
     
@@ -36,22 +34,12 @@ public class EggBasketManager : MonoBehaviour
             new Vector3(0.821f, 0.2f, 5.177f),
         };
 
-        List<Vector3> basketPositions = new List<Vector3>
-        {
-            new Vector3(0.287f, 0.224f, 5.896f),
-            new Vector3(1.77f, 0.224f, 3.14f),
-            new Vector3(4.1067f, 0.224f, 2.216f),
-            new Vector3(0.4864f, 0.224f, 1.8336f),
-            new Vector3(2.076f, 0.224f, 0.3377f),
-        };
-
         for (int i = 0; i < eggPositions.Count; i++)
         {
-            EggBasketEntry entry = new EggBasketEntry();
+            EggEntry entry = new EggEntry();
             entry.id = i;
             entry.eggPos = eggPositions[i];
-            entry.basketPos = basketPositions[i];
-            eggBasketPairEntries.Add(entry);
+            eggEntries.Add(entry);
         }
 
         studyDoneUI.transform.position = new Vector3(0, 400, 0); // start the done UI up and out of the way until we need it
@@ -59,26 +47,31 @@ public class EggBasketManager : MonoBehaviour
 
     }
 
-    public void startEggBasketFromUI(GameObject uiGO)
+    public void startEggRoutineFromUI(GameObject uiGO)
     {
-        spawnNextEggBasketPair();
+        spawnNextEgg();
         uiGO.SetActive(false);
     }
 
-    private void spawnNextEggBasketPair()
+    private void spawnNextEgg()
     {
 
-        GameObject egg = Instantiate(eggPrefab, eggBasketPairEntries[0].eggPos, Quaternion.identity);
-        GameObject basket = Instantiate(basketPrefab, eggBasketPairEntries[0].basketPos, Quaternion.identity);
-        basket.transform.Rotate(new Vector3(-90, 0, 0)); //scuffed way of making sure basket is right side up :)
+        GameObject egg = Instantiate(eggPrefab, eggEntries[0].eggPos, Quaternion.identity);
 
         egg.GetComponent<EggLogic>().SetManager(this); // this makes sure we are explicit about what the script is referencing since instanciating stuff can sometimes make this weird
 
         //TODO: Start logging
-        studyLogger.StartSegmentLogging(eggBasketPairEntries[0].id);
+        if (studyLogger != null)
+        {
+            studyLogger.StartSegmentLogging(eggEntries[0].id);
+        }
+        else
+        {
+            Debug.LogWarning("Logs cannot be started in this scene. This should only happen in the training scene.", this);
+        }
     }
 
-    public void onEggBasketCompletion(float delay)
+    public void onEggCompletion(float delay)
     {
         StartCoroutine(CompleteAfterDelayRoutine(delay));
     }
@@ -86,27 +79,34 @@ public class EggBasketManager : MonoBehaviour
     private IEnumerator CompleteAfterDelayRoutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        _onEggBasketCompletion();
+        _onEggCompletion();
     }
 
-    private void _onEggBasketCompletion()
+    private void _onEggCompletion()
     {
-        if (eggBasketPairEntries.Count == 0)
+        if (eggEntries.Count == 0)
         {
             Debug.LogWarning("No egg/basket pairs left to spawn.", this);
             return;
         }
 
 
-        eggBasketPairEntries.RemoveAt(0);
-        studyLogger.StopSegmentLogging();
-
-
-        if (eggBasketPairEntries.Count > 0)
+        eggEntries.RemoveAt(0);
+        if (studyLogger != null)
         {
-            spawnNextEggBasketPair();
+            studyLogger.StopSegmentLogging();
         }
-        else if (eggBasketPairEntries.Count == 0)
+        else
+        {
+            Debug.LogWarning("Logs cannot be stopped in this scene. This should only happen in the training scene.", this);
+        }
+
+
+        if (eggEntries.Count > 0)
+        {
+            spawnNextEgg();
+        }
+        else if (eggEntries.Count == 0)
         {
             LoadStudyDoneUI();
         }
@@ -114,10 +114,17 @@ public class EggBasketManager : MonoBehaviour
 
     private void LoadStudyDoneUI()
     {
-        studyDoneUI.transform.position = playerHeadAnchor.transform.TransformPoint(new Vector3(0, 0, 1)); //place ui right in front of players head relative to where they are 
-        studyDoneUI.transform.rotation = playerHeadAnchor.transform.rotation;
-        studyDoneUI.transform.SetParent(playerHeadAnchor.transform);
-        Debug.LogError("LOAD STUDY STUFF DONE");
+        if (studyDoneUI != null)
+        {
+            studyDoneUI.transform.position = playerHeadAnchor.transform.TransformPoint(new Vector3(0, 0, 1)); //place ui right in front of players head relative to where they are 
+            studyDoneUI.transform.rotation = playerHeadAnchor.transform.rotation;
+            studyDoneUI.transform.SetParent(playerHeadAnchor.transform);
+        }
+        else
+        {
+            Debug.LogWarning("There is no study done ui obj assigned to EggBasketManager. This is okay in training scene.");
+        }
+        
     }
 
     

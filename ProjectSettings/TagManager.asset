@@ -12,7 +12,7 @@ TagManager:
   - QDSUIPrimaryButton
   - QDSUITextInvertedColor
   - QDSUITextSecondaryInvertedColor
-  - Basket
+  - EggCollectionTrigger
   layers:
   - Default
   - TransparentFX
