@@ -12,7 +12,6 @@ public class EggEntry
 public class EggBasketManager : MonoBehaviour
 {
 
-    [SerializeField] private Event nextEggBasketPair;
     [SerializeField] private GameObject eggPrefab;
     [SerializeField] private GameObject basketPrefab;
     [SerializeField] private loggingManager studyLogger;
@@ -62,7 +61,14 @@ public class EggBasketManager : MonoBehaviour
         egg.GetComponent<EggLogic>().SetManager(this); // this makes sure we are explicit about what the script is referencing since instanciating stuff can sometimes make this weird
 
         //TODO: Start logging
-        studyLogger.StartSegmentLogging(eggEntries[0].id);
+        if (studyLogger != null)
+        {
+            studyLogger.StartSegmentLogging(eggEntries[0].id);
+        }
+        else
+        {
+            Debug.LogWarning("Logs cannot be started in this scene. This should only happen in the training scene.", this);
+        }
     }
 
     public void onEggCompletion(float delay)
@@ -86,7 +92,14 @@ public class EggBasketManager : MonoBehaviour
 
 
         eggEntries.RemoveAt(0);
-        studyLogger.StopSegmentLogging();
+        if (studyLogger != null)
+        {
+            studyLogger.StopSegmentLogging();
+        }
+        else
+        {
+            Debug.LogWarning("Logs cannot be stopped in this scene. This should only happen in the training scene.", this);
+        }
 
 
         if (eggEntries.Count > 0)
@@ -101,9 +114,17 @@ public class EggBasketManager : MonoBehaviour
 
     private void LoadStudyDoneUI()
     {
-        studyDoneUI.transform.position = playerHeadAnchor.transform.TransformPoint(new Vector3(0, 0, 1)); //place ui right in front of players head relative to where they are 
-        studyDoneUI.transform.rotation = playerHeadAnchor.transform.rotation;
-        studyDoneUI.transform.SetParent(playerHeadAnchor.transform);
+        if (studyDoneUI != null)
+        {
+            studyDoneUI.transform.position = playerHeadAnchor.transform.TransformPoint(new Vector3(0, 0, 1)); //place ui right in front of players head relative to where they are 
+            studyDoneUI.transform.rotation = playerHeadAnchor.transform.rotation;
+            studyDoneUI.transform.SetParent(playerHeadAnchor.transform);
+        }
+        else
+        {
+            Debug.LogWarning("There is no study done ui obj assigned to EggBasketManager. This is okay in training scene.");
+        }
+        
     }
 
     

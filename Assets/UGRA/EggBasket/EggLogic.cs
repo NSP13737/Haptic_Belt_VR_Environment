@@ -18,7 +18,6 @@ public class EggLogic : MonoBehaviour
         triggered = true;
 
         Destroy(this.gameObject, 0.5f);
-        Destroy(other.gameObject, 0.5f);
 
         manager.onEggCompletion(0.5f);
         
