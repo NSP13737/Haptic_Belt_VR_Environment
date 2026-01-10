@@ -56,8 +56,5 @@ public class TrainingUI_Manager : MonoBehaviour
         boundaryVisibilityUI.transform.position = this.gameObject.transform.position;
         eggBasketManager.startEggRoutineFromUI(this.gameObject); // this will make the intensity UI disappear
 
-
-        //this.gameObject.SetActive(false); 
-
     }
 }

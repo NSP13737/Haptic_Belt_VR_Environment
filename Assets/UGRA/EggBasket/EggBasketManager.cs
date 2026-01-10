@@ -12,26 +12,29 @@ public class EggEntry
 public class EggBasketManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject eggPrefab;
-    [SerializeField] private GameObject basketPrefab;
-    [SerializeField] private loggingManager studyLogger;
-    [SerializeField] private GameObject studyDoneUI;
-    [SerializeField] private GameObject playerHeadAnchor;
+    [SerializeField] protected GameObject eggPrefab;
+    [SerializeField] protected GameObject basketObj;
+    [SerializeField] protected GameObject studyDoneUI;
+    [Header("Optional Params")]
+    [SerializeField] protected loggingManager studyLogger; // Nullable for training child
+    [SerializeField] protected GameObject playerHeadAnchor; // Nullable for training child
 
-    public List<EggEntry> eggEntries = new List<EggEntry>();
+    protected Vector3 originalBasketPos;
+    protected List<EggEntry> eggEntries = new List<EggEntry>();
 
 
-    
+    protected virtual void Awake()
+    {
+        InitializeEggs();
+        HideUIandBasket();
+    }
 
-    private void Awake()
+    protected virtual void InitializeEggs()
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
             new Vector3(0.645f, 0.2f, 3.245f),
-            new Vector3(3.973f, 0.2f, 0.2567f),
-            new Vector3(0.4777f, 0.2f, 0.4034f),
-            new Vector3(4.0678f, 0.2f, 5.68f),
-            new Vector3(0.821f, 0.2f, 5.177f),
+
         };
 
         for (int i = 0; i < eggPositions.Count; i++)
@@ -41,33 +44,34 @@ public class EggBasketManager : MonoBehaviour
             entry.eggPos = eggPositions[i];
             eggEntries.Add(entry);
         }
+    }
 
+    protected virtual void HideUIandBasket()
+    {
         studyDoneUI.transform.position = new Vector3(0, 400, 0); // start the done UI up and out of the way until we need it
-
-
+        
+        originalBasketPos = basketObj.transform.position;
+        basketObj.transform.position = new Vector3(0, 400, 0);
     }
 
     public void startEggRoutineFromUI(GameObject uiGO)
     {
         spawnNextEgg();
+        basketObj.transform.position = originalBasketPos;
+
         uiGO.SetActive(false);
     }
 
-    private void spawnNextEgg()
+    protected virtual void spawnNextEgg()
     {
 
         GameObject egg = Instantiate(eggPrefab, eggEntries[0].eggPos, Quaternion.identity);
 
         egg.GetComponent<EggLogic>().SetManager(this); // this makes sure we are explicit about what the script is referencing since instanciating stuff can sometimes make this weird
 
-        //TODO: Start logging
         if (studyLogger != null)
         {
             studyLogger.StartSegmentLogging(eggEntries[0].id);
-        }
-        else
-        {
-            Debug.LogWarning("Logs cannot be started in this scene. This should only happen in the training scene.", this);
         }
     }
 
@@ -82,7 +86,7 @@ public class EggBasketManager : MonoBehaviour
         _onEggCompletion();
     }
 
-    private void _onEggCompletion()
+    protected virtual void _onEggCompletion()
     {
         if (eggEntries.Count == 0)
         {
@@ -92,13 +96,10 @@ public class EggBasketManager : MonoBehaviour
 
 
         eggEntries.RemoveAt(0);
+
         if (studyLogger != null)
         {
             studyLogger.StopSegmentLogging();
-        }
-        else
-        {
-            Debug.LogWarning("Logs cannot be stopped in this scene. This should only happen in the training scene.", this);
         }
 
 
@@ -112,7 +113,7 @@ public class EggBasketManager : MonoBehaviour
         }
     }
 
-    private void LoadStudyDoneUI()
+    protected virtual void LoadStudyDoneUI()
     {
         if (studyDoneUI != null)
         {
@@ -122,7 +123,7 @@ public class EggBasketManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("There is no study done ui obj assigned to EggBasketManager. This is okay in training scene.");
+            Debug.LogError("There is no study done ui obj assigned to EggBasketManager.");
         }
         
     }

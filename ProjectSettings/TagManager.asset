@@ -13,6 +13,7 @@ TagManager:
   - QDSUITextInvertedColor
   - QDSUITextSecondaryInvertedColor
   - EggCollectionTrigger
+  - Basket
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - UI
   - Overlay UI
   - realBoundary
-  - 
+  - Eggs
   - 
   - 
   - 
