@@ -7,7 +7,7 @@ public class BoundaryRenderControl : MonoBehaviour
 
     private List<GameObject> allBoundaryGOs = new List<GameObject>();
 
-    [SerializeField] public bool renderBoundaries = false;
+    [SerializeField] private bool renderBoundaries = false;
     
     // Start is called before the first frame update
     void Start()

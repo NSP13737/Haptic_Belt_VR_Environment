@@ -235,9 +235,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eggPrefab: {fileID: 3958428390038643411, guid: f14624dd1e7cb9d40ac20b3368d3997f, type: 3}
-  basketPrefab: {fileID: 4053482465071359727, guid: 4cf535cb9ede3b44d945b48006ef1f9b, type: 3}
-  studyLogger: {fileID: 2032596028}
+  basketObj: {fileID: 8499262838297175621}
   studyDoneUI: {fileID: 85329436}
+  studyLogger: {fileID: 2032596028}
   playerHeadAnchor: {fileID: 158528137}
 --- !u!4 &34345204
 Transform:
@@ -6728,7 +6728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2815989665444380947, guid: 0fddabcbc439e3445a533e469573cd73, type: 3}
       propertyPath: m_Name
-      value: ExperimentalRoom_Training
+      value: ExperimentalRoom
       objectReference: {fileID: 0}
     - target: {fileID: 7517101659768859016, guid: 0fddabcbc439e3445a533e469573cd73, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6772,7 +6772,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8168345342073270196, guid: 0fddabcbc439e3445a533e469573cd73, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1451265514983693218, guid: 0fddabcbc439e3445a533e469573cd73, type: 3}
@@ -6868,6 +6868,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34dd5232b1af5524f88b017ca10367e0, type: 3}
+--- !u!1 &8499262838297175621 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1220971979301997603, guid: 34dd5232b1af5524f88b017ca10367e0, type: 3}
+  m_PrefabInstance: {fileID: 8499262838297175620}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

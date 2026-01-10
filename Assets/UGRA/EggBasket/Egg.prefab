@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1263637316517389230}
   - component: {fileID: 6459127580568284902}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HandGrabInstallationRoutine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 859281355672478819}
   - component: {fileID: 2588382231682739021}
   - component: {fileID: 1016664524467505296}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Egg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 3878950835667749169}
   - component: {fileID: 2090763586691166331}
   - component: {fileID: 3181327246747981039}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
