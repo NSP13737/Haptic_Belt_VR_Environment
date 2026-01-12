@@ -22,11 +22,11 @@ public class Training_EggBasketManager : EggBasketManager
     {
         List<Vector3> eggPositions = new List<Vector3>
         {
-            new Vector3(0.645f, 0.2f, 3.245f),
-            new Vector3(3.973f, 0.2f, 0.2567f),
-            new Vector3(0.4777f, 0.2f, 0.4034f),
-            new Vector3(4.0678f, 0.2f, 5.68f),
-            new Vector3(0.821f, 0.2f, 5.177f),
+            new Vector3(1.5f, 0.2f, 1.5f),
+            //new Vector3(3.973f, 0.2f, 0.2567f),
+            //new Vector3(0.4777f, 0.2f, 0.4034f),
+            //new Vector3(4.0678f, 0.2f, 5.68f),
+            //new Vector3(0.821f, 0.2f, 5.177f),
         };
 
         for (int i = 0; i < eggPositions.Count; i++)
