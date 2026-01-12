@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eggPrefab: {fileID: 3958428390038643411, guid: f14624dd1e7cb9d40ac20b3368d3997f, type: 3}
-  basketObj: {fileID: 0}
+  basketObj: {fileID: 1646493272}
   studyDoneUI: {fileID: 85329436}
   studyLogger: {fileID: 2032596028}
   playerHeadAnchor: {fileID: 158528137}
@@ -1469,9 +1469,9 @@ RectTransform:
   - {fileID: 676273511}
   m_Father: {fileID: 413688893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 40, y: -12}
   m_SizeDelta: {x: 40, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &411573583
@@ -3095,9 +3095,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 411573582}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -15}
   m_SizeDelta: {x: 40, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &919555306
@@ -3679,9 +3679,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 413688893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 16, y: -12}
   m_SizeDelta: {x: 8, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1214047358
@@ -4378,6 +4378,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34dd5232b1af5524f88b017ca10367e0, type: 3}
+--- !u!1 &1646493272 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1220971979301997603, guid: 34dd5232b1af5524f88b017ca10367e0, type: 3}
+  m_PrefabInstance: {fileID: 1646493271}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1715437909
 GameObject:
   m_ObjectHideFlags: 0
