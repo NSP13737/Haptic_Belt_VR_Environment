@@ -24,7 +24,7 @@ public class TrainingUI_Manager : MonoBehaviour
         boundaryVisibilityUI.transform.position = new Vector3(0, 1000, 0); // put this in space so that player doesn't see it (I'm choosing not to deactivate the object bc that was being finicky)
         beltDistanceCaster.disableRealtimeDistance(true); //disable realtime distance getting until we are done manually adjusting min detectable intensity
         
-}
+    }
 
     // Update is called once per frame
     void Update()
@@ -55,6 +55,7 @@ public class TrainingUI_Manager : MonoBehaviour
 
         boundaryVisibilityUI.transform.position = this.gameObject.transform.position;
         eggBasketManager.startEggRoutineFromUI(this.gameObject); // this will make the intensity UI disappear
+
 
     }
 }
