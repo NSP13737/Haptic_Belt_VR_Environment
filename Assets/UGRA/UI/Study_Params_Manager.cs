@@ -80,6 +80,7 @@ public class Study_Params_Manager : MonoBehaviour
     [SerializeField] private FloatEvent onChangeFixedFreqHz;
     [SerializeField] private FloatEvent onChangeJustDetectableIntensity;
 
+    
     private void Awake()
     {
         udp = GetComponent<UDP_Manager>();
