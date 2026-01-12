@@ -9,9 +9,6 @@ public class FadeHandler : MonoBehaviour
     private FadeEffect FadeEffect;
 
     [SerializeField]
-    private float fadeDistance = 0.1f;
-
-    [SerializeField]
     private bool reverseLogic = false;
 
     [SerializeField]
@@ -32,6 +29,7 @@ public class FadeHandler : MonoBehaviour
     {
         Vector3 origin = parentTransform.position;
         origin.y = 0; //set so that player height doesn't matter
+        float fadeDistance = 0.001f; //this is very small so that you effectively have to be inside the wall, since we are already accounting for safety w/ safety bounds
         Collider[] hitColliders = Physics.OverlapSphere(origin, fadeDistance, layerMask);
 
         if (hitColliders.Length > 0 )
