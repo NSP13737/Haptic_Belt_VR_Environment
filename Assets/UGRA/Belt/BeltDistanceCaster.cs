@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,17 @@ public class BeltDistanceCaster : MonoBehaviour
             raycastVisual.SetPosition(0, startPoint);
             raycastVisual.SetPosition(1, endPoint);
         }
+
+        //Manually cutting out distances from back-left and back-right motors
+        distancesBuffer[3] = float.MaxValue; //back left
+        distancesBuffer[4] = float.MaxValue; // back
+        distancesBuffer[5] = float.MaxValue; // back right
+
+        // Adding a two motor shift to array so that we can shift the belt (battery is now mounted on right side of body instead of back)
+        Array.Reverse(distancesBuffer);          // { 7, 6, 5, 4, 3, 2, 1, 0 }
+        Array.Reverse(distancesBuffer, 0, 6);    // { 2, 3, 4, 5, 6, 7, 1, 0 }
+        Array.Reverse(distancesBuffer, 6, distancesBuffer.Length - 6); // { 2, 3, 4, 5, 6, 7, 0, 1 }
+
 
         udp.setDistances(distancesBuffer);
     }
