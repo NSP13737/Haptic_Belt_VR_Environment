@@ -30,7 +30,7 @@ public class DistanceOverrider : MonoBehaviour
                 fakeDistances[i] = setDist;
             }
             udpManager.setDistances(fakeDistances); //updating this every frame isn't effecient, but it works
-            Debug.LogError($"Distances; {fakeDistances}");
+            //Debug.LogError($"Distances; {fakeDistances}");
         }
         else // Once the intensity UI has been disabled, reenable realtime distance sensing and disable this checker so that it isn't running in the BG
         {
