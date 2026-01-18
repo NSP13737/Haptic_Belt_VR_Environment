@@ -12242,13 +12242,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: 2.25ft_VisualizationDastmalchi_SafetyWalls
       objectReference: {fileID: 0}
+    - target: {fileID: 3465243254744477826, guid: 06d274b2275cab84baaf21a05905cfb9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4277527727087331896, guid: 06d274b2275cab84baaf21a05905cfb9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4277527727087331896, guid: 06d274b2275cab84baaf21a05905cfb9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.9
+      value: -1.512
       objectReference: {fileID: 0}
     - target: {fileID: 4277527727087331896, guid: 06d274b2275cab84baaf21a05905cfb9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13246,7 +13250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7779261728615182434, guid: 39f64b8919974e444bc572395d447242, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.58
+      value: -1.025
       objectReference: {fileID: 0}
     - target: {fileID: 7779261728615182434, guid: 39f64b8919974e444bc572395d447242, type: 3}
       propertyPath: m_LocalPosition.z
