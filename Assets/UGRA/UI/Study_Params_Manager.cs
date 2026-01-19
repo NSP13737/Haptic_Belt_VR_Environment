@@ -21,25 +21,25 @@ public class Study_Params_Manager : MonoBehaviour
     // Activation Distance (meters)
     // -----------------------------
     float minActivationDist_sliderMin = 0.0f;
-    float minActivationDist_sliderMax = 5.0f;
+    float minActivationDist_sliderMax = 0.5f;
     [SerializeField, Range(0, 5)]
     float minActivationDist = 0.0f;
 
     float maxActivationDist_sliderMin = 0.0f;
-    float maxActivationDist_sliderMax = 5.0f;
+    float maxActivationDist_sliderMax = 2.0f;
     [SerializeField, Range(0, 5)]
     float maxActivationDist = 5.0f;
 
     // -----------------------------
     // Frequency (Hz)
     // -----------------------------
-    float minFreqHz_sliderMin = 0.0f;
+    float minFreqHz_sliderMin = 0.1f;
     float minFreqHz_sliderMax = 50.0f;
     [SerializeField, Range(0, 50)]
     float minFreqHz = 0.0f;
 
     float maxFreqHz_sliderMin = 0.0f;
-    float maxFreqHz_sliderMax = 50.0f;
+    float maxFreqHz_sliderMax = 40.0f;
     [SerializeField, Range(0, 50)]
     float maxFreqHz = 50.0f;
 
@@ -55,7 +55,7 @@ public class Study_Params_Manager : MonoBehaviour
     // Fixed Frequency (Hz)
     // -----------------------------
     float fixedFreqHz_sliderMin = 0.0f;
-    float fixedFreqHz_sliderMax = 50.0f;
+    float fixedFreqHz_sliderMax = 40.0f;
     [SerializeField, Range(0, 50)]
     float fixedFreqHz = 10.0f;
 
@@ -80,7 +80,8 @@ public class Study_Params_Manager : MonoBehaviour
     [SerializeField] private FloatEvent onChangeFixedFreqHz;
     [SerializeField] private FloatEvent onChangeJustDetectableIntensity;
 
-    
+    static float[] studyParamsBuffer = new float[8];
+
     private void Awake()
     {
         udp = GetComponent<UDP_Manager>();
@@ -88,17 +89,14 @@ public class Study_Params_Manager : MonoBehaviour
 
     void Update()
     {
-        float[] studyParamsBuffer =
-        {
-            conditionSelection,
-            minActivationDist,
-            maxActivationDist,
-            minFreqHz,
-            maxFreqHz,
-            fixedDutyCycle,
-            fixedFreqHz,
-            justDetectableIntensity
-        };
+        studyParamsBuffer[0] = conditionSelection;
+        studyParamsBuffer[1] = minActivationDist;
+        studyParamsBuffer[2] = maxActivationDist;
+        studyParamsBuffer[3] = minFreqHz;
+        studyParamsBuffer[4] = maxFreqHz;
+        studyParamsBuffer[5] = fixedDutyCycle;
+        studyParamsBuffer[6] = fixedFreqHz;
+        studyParamsBuffer[7] = justDetectableIntensity;
 
         udp.setStudyParams(studyParamsBuffer);
     }

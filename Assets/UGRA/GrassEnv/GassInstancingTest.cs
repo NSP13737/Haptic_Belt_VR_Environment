@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
-using System.Drawing;
+// using System.Drawing; // <-- Remove; not used and may conflict with Unity
 
 public class GrassInstancingTest : MonoBehaviour
 {
@@ -22,10 +22,8 @@ public class GrassInstancingTest : MonoBehaviour
     [SerializeField] private float randomRot = 15f;
     [SerializeField] private float weightDistribution = 1f;
 
-
-
-
-    private readonly List<Matrix4x4[]> _batches = new List<Matrix4x4[]>();
+    // Made protected so a child can access/rebuild
+    protected readonly List<Matrix4x4[]> _batches = new List<Matrix4x4[]>();
 
     private struct Settings
     {
@@ -52,25 +50,49 @@ public class GrassInstancingTest : MonoBehaviour
 
         public static bool operator !=(Settings s1, Settings s2)
         {
-            return ((s1._weightDistribution != s2._weightDistribution) || (s1._instanceCount != s2._instanceCount) || (s1._areaRadius != s2._areaRadius) || (s1._groundY != s2._groundY ) || (s1._minSize != s2._minSize) || (s1._maxSize != s2._maxSize) || (s1._heightScalar != s2._heightScalar) || (s1._randomRot != s2._randomRot));
+            return ((s1._weightDistribution != s2._weightDistribution) ||
+                    (s1._instanceCount != s2._instanceCount) ||
+                    (s1._areaRadius != s2._areaRadius) ||
+                    (s1._groundY != s2._groundY) ||
+                    (s1._minSize != s2._minSize) ||
+                    (s1._maxSize != s2._maxSize) ||
+                    (s1._heightScalar != s2._heightScalar) ||
+                    (s1._randomRot != s2._randomRot));
         }
         public static bool operator ==(Settings s1, Settings s2)
         {
-            return ((s1._weightDistribution == s2._weightDistribution) && (s1._instanceCount == s2._instanceCount) && (s1._areaRadius == s2._areaRadius) && (s1._groundY == s2._groundY) && (s1._minSize == s2._minSize) && (s1._maxSize == s2._maxSize) && (s1._heightScalar == s2._heightScalar) && (s1._randomRot == s2._randomRot));
+            return ((s1._weightDistribution == s2._weightDistribution) &&
+                    (s1._instanceCount == s2._instanceCount) &&
+                    (s1._areaRadius == s2._areaRadius) &&
+                    (s1._groundY == s2._groundY) &&
+                    (s1._minSize == s2._minSize) &&
+                    (s1._maxSize == s2._maxSize) &&
+                    (s1._heightScalar == s2._heightScalar) &&
+                    (s1._randomRot == s2._randomRot));
         }
     }
 
     private Settings previousSettings;
-    void Awake()
+    private Vector3 previousCenter;
+
+    // NEW: Overridable center. By default, center is at world (0, groundY, 0).
+    protected virtual Vector3 GetCenter()
+    {
+        return new Vector3(0f, groundY, 0f);
+    }
+
+    // Made protected so a child can optionally call or override
+    protected virtual void Awake()
     {
         previousSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightDistribution);
+        previousCenter = GetCenter();
 
         if (!validateInputs()) return;
-
         BuildBatches();
-
     }
-    private bool validateInputs()
+
+    // Made protected if you want to allow override. Not strictly necessary.
+    protected virtual bool validateInputs()
     {
         // Basic validation
         if (grassMesh == null)
@@ -102,12 +124,16 @@ public class GrassInstancingTest : MonoBehaviour
         return true;
     }
 
-    private void BuildBatches() 
+    // Made protected so a child can reuse/override
+    protected virtual void BuildBatches()
     {
         _batches.Clear();
 
         const int MaxPerBatch = 1023;
         int remainingInstances = instanceCount;
+
+        // Use overridable center
+        Vector3 center = GetCenter();
 
         while (remainingInstances > 0)
         {
@@ -117,25 +143,38 @@ public class GrassInstancingTest : MonoBehaviour
             for (int i = 0; i < countThisBatch; i++)
             {
                 float weight = weightDistribution * ((Random.value + Random.value + Random.value) / 3.0f);
-                Vector2 p = Random.insideUnitCircle * (areaRadius*weight);
-                Vector3 pos = new Vector3(p.x, groundY, p.y);
+
+                // Random point in circle around center (XZ plane)
+                Vector2 p = Random.insideUnitCircle * (areaRadius * weight);
+                Vector3 pos = new Vector3(center.x + p.x, center.y /* keep groundY */, center.z + p.y);
+
                 float s = Random.Range(minSize, maxSize);
-                Vector3 scale = new Vector3(s, s*heightScalar, s);
-                Quaternion rot = Quaternion.Euler(Random.Range(-randomRot, randomRot), Random.Range(0f,360f), Random.Range(-randomRot, randomRot));
+                Vector3 scale = new Vector3(s, s * heightScalar, s);
+
+                Quaternion rot = Quaternion.Euler(
+                    Random.Range(-randomRot, randomRot),
+                    Random.Range(0f, 360f),
+                    Random.Range(-randomRot, randomRot));
+
                 matricies[i] = Matrix4x4.TRS(pos, rot, scale);
             }
             _batches.Add(matricies);
             remainingInstances -= countThisBatch;
         }
-
     }
 
-    void Update()
+    // Made protected so a child can override and still call base.Update if desired
+    protected virtual void Update()
     {
         Settings currentSettings = new Settings(instanceCount, areaRadius, groundY, minSize, maxSize, heightScalar, randomRot, weightDistribution);
-        if (currentSettings != previousSettings)
+        Vector3 currentCenter = GetCenter();
+
+        // Recompute if settings change or center moves
+        if (currentSettings != previousSettings || currentCenter != previousCenter)
         {
-            Awake(); //recompute batches if we change vars in editor
+            previousSettings = currentSettings;
+            previousCenter = currentCenter;
+            BuildBatches();
         }
 
         // Draw all instances each frame

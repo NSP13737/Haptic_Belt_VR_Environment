@@ -23,17 +23,19 @@ public class DistanceOverrider : MonoBehaviour
         if (flagGO.activeInHierarchy)
         {
             beltDistanceCaster.disableRealtimeDistance(true);
-            float setDist = udpManager.getParam_MaxDistance();
+            float setDist = udpManager.getParam_MaxDistance()*0.999f; //making 99% of max val bc at max val user will never feel it
             float[] fakeDistances = new float[8];
             for (int i = 0; i < fakeDistances.Length; i++)
             {
                 fakeDistances[i] = setDist;
             }
             udpManager.setDistances(fakeDistances); //updating this every frame isn't effecient, but it works
+            //Debug.LogError($"Distances; {fakeDistances}");
         }
-        else
+        else // Once the intensity UI has been disabled, reenable realtime distance sensing and disable this checker so that it isn't running in the BG
         {
-            beltDistanceCaster.disableRealtimeDistance(false); //calling this every frame is pretty bad, but it works
+            beltDistanceCaster.disableRealtimeDistance(false);
+            this.gameObject.SetActive(false);
         }
     }
 }
