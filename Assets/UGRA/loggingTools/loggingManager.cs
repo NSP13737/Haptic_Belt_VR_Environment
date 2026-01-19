@@ -10,7 +10,7 @@ public class loggingManager : MonoBehaviour
     // ORIGINAL functionality
     // -------------------------
     private string logFolder;
-    private string logFileName = "logDump.log";
+    private static string logFileName = "logDump.csv";
     private float logStartTime;
     private int entryNum;
 
@@ -21,14 +21,13 @@ public class loggingManager : MonoBehaviour
     // -------------------------
     [Header("Participant / Questionnaire (assign in Inspector)")]
     public Slider participantIdSlider;   // slider1
-    public Slider questionSlider2;       // slider2
+    public Slider conditionSlider;       // slider2
 
     [Header("TMP label lookup")]
     public string labelChildName = "Label";
 
     [Header("Participant file naming")]
     public string filePrefix = "logID_";
-    public int fileNameDecimals = 0; // 0 => logID_7.log, 2 => logID_7p00.log
 
     [Header("Questionnaire behavior")]
     public bool overwriteQuestionnaireOnSubmit = false;
@@ -57,16 +56,6 @@ public class loggingManager : MonoBehaviour
     {
         // keep Start in case you had other Start-time behavior later
         // (folder already created in Awake)
-    }
-
-    // -------------------------
-    // ORIGINAL API (kept)
-    // -------------------------
-    public void SetLogFileName(string logFileName)
-    {
-        this.logFileName = logFileName;
-        Debug.Log("SetLogFileName -> " + Path.Combine(logFolder, this.logFileName));
-        EnsureFileHasHeaders(Path.Combine(logFolder, this.logFileName));
     }
 
     public void StartSegmentLogging(int entryNum)
@@ -115,8 +104,6 @@ public class loggingManager : MonoBehaviour
 
         try
         {
-            // if this is the first write ever, ensure file exists + headers
-            EnsureFileHasHeaders(filePath);
 
             using (StreamWriter writer = new StreamWriter(filePath, true))
             {
@@ -132,63 +119,52 @@ public class loggingManager : MonoBehaviour
     }
 
     // -------------------------
-    // NEW: Hook this to your Toggle OnValueChanged(bool)
+    // NEW: Hook this to your Toggle OnValueChanged()
     // -------------------------
-    public void SubmitParticipantAndQuestions(bool isOn)
+    public void SubmitParticipantAndQuestions(GameObject caller)
     {
-        Debug.Log("SubmitParticipantAndQuestions fired. isOn=" + isOn + " | manager=" + gameObject.name);
-        //if (!isOn) return;
+        Debug.Log("SubmitParticipantAndQuestions fired. | manager=" + gameObject.name);
 
-        if (participantIdSlider == null || questionSlider2 == null)
+        if (participantIdSlider == null || conditionSlider == null)
         {
-            Debug.LogWarning("SubmitParticipantAndQuestions: sliders not assigned in Inspector.");
+            Debug.LogError("SubmitParticipantAndQuestions: sliders not assigned in Inspector.");
             return;
         }
 
         try
         {
-            Directory.CreateDirectory(logFolder);
 
             // Set participant-specific file name
             logFileName = MakeSafeFileNameFromParticipantSlider(participantIdSlider.value);
             string filePath = Path.Combine(logFolder, logFileName);
 
-            Debug.Log("SUBMIT will write file -> " + filePath);
+            //Debug.Log("SUBMIT will write file -> " + filePath);
 
             // Force-create file immediately (so you can see it appear even before writing)
             ForceCreateFileIfMissing(filePath);
 
-            // Ensure headers for new file
-            EnsureFileHasHeaders(filePath);
 
-            // Build questionnaire line
-            string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-            string label1 = GetSliderLabelTMP(participantIdSlider);
-            string label2 = GetSliderLabelTMP(questionSlider2);
+            string parID = GetSliderLabelTMP(participantIdSlider);
+            string condition = GetSliderLabelTMP(conditionSlider);
 
             string questionnaireLine =
-                $"questionnaire,{ts},{Csv(label1)},{participantIdSlider.value},{Csv(label2)},{questionSlider2.value}";
+                $"{Csv(parID)},{participantIdSlider.value}\n" +
+                $"{Csv(condition)},{conditionSlider.value}";
 
-            if (overwriteQuestionnaireOnSubmit)
+            //append info to file
+            using (StreamWriter writer = new StreamWriter(filePath, true))
             {
-                // WARNING: overwrites entire file
-                string content =
-                    "section,columns\n" +
-                    "questionnaire,timestamp,label1,value1,label2,value2\n" +
-                    "segment,entryNum,eggToBasketTime,numCollisions,distanceTraveled\n" +
-                    questionnaireLine + "\n";
-
-                File.WriteAllText(filePath, content);
-            }
-            else
-            {
-                using (StreamWriter writer = new StreamWriter(filePath, true))
-                {
-                    writer.WriteLine(questionnaireLine);
-                }
+                writer.WriteLine(questionnaireLine);
             }
 
-            Debug.Log("SUBMIT write done. File exists? " + File.Exists(filePath));
+            //create log headers for segment tracking
+            WriteLog("segment,eggToBasketTime,numCollisions,distanceTraveled");
+
+            //Debug.Log("SUBMIT write done. File exists? " + File.Exists(filePath));
+
+            //disable the panel once we have submitted everything
+            caller.transform.root.gameObject.SetActive(false);
+            
         }
         catch (Exception e)
         {
@@ -205,10 +181,10 @@ public class loggingManager : MonoBehaviour
 
         // create empty file and close immediately
         using (FileStream fs = File.Create(filePath)) { }
-        Debug.Log("Force-created new file -> " + filePath);
+        //Debug.Log("Force-created new file -> " + filePath);
     }
 
-    private void EnsureFileHasHeaders(string filePath)
+    private void CreateLogHeaders(string filePath)
     {
         if (File.Exists(filePath))
         {
@@ -223,13 +199,10 @@ public class loggingManager : MonoBehaviour
 
         try
         {
-            string header =
-                "section,columns\n" +
-                "questionnaire,timestamp,label1,value1,label2,value2\n" +
-                "segment,entryNum,eggToBasketTime,numCollisions,distanceTraveled\n";
+            string header = "segment,entryNum,eggToBasketTime,numCollisions,distanceTraveled\n";
 
             File.WriteAllText(filePath, header);
-            Debug.Log("Wrote headers -> " + filePath);
+            //Debug.Log("Wrote headers -> " + filePath);
         }
         catch (Exception e)
         {
@@ -239,7 +212,7 @@ public class loggingManager : MonoBehaviour
 
     private string MakeSafeFileNameFromParticipantSlider(float value)
     {
-        string formatted = value.ToString("F" + Mathf.Max(0, fileNameDecimals));
+        string formatted = value.ToString("F0");
 
         formatted = formatted.Replace("-", "neg");
         formatted = formatted.Replace(".", "p");
@@ -248,7 +221,7 @@ public class loggingManager : MonoBehaviour
         formatted = formatted.Replace("\\", "_");
         formatted = formatted.Replace(" ", "");
 
-        return $"{filePrefix}{formatted}.log";
+        return $"{filePrefix}{formatted}.csv";
     }
 
     private string GetSliderLabelTMP(Slider slider)
