@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using System.Linq; // Required for sorting and list manipulation
+using System.Text.RegularExpressions; // Required for name parsing
 
 public class EggEntry
 {
@@ -25,26 +27,68 @@ public class EggBasketManager : MonoBehaviour
 
     protected virtual void Awake()
     {
-        InitializeEggs();
+        InitializeEggList();
         HideUIandBasket();
     }
 
-    protected virtual void InitializeEggs()
+
+
+protected virtual void InitializeEggList()
+{
+    // 1. Find all GameObjects in the scene (or use transform.Cast<Transform>() if they are children)
+    var allObjects = FindObjectsOfType<GameObject>();
+
+    // 2. Define a Regex pattern to match "user_egg" or "user_egg (123)"
+    // ^ matches start, $ matches end. 
+    // (?: \(\d+\))? optionally matches " (number)"
+    Regex namePattern = new Regex(@"^user_egg(?:\s\((\d+)\))?$");
+
+    // 3. Create a temporary list to hold the parsed data
+    var foundEggs = new List<(int sortIndex, Vector3 position)>();
+
+    foreach (Transform child in transform)
     {
-        List<Vector3> eggPositions = new List<Vector3>
-        {
-            new Vector3(0.645f, 0.2f, 3.245f),
+        Match match = namePattern.Match(child.name);
 
-        };
-
-        for (int i = 0; i < eggPositions.Count; i++)
+        if (match.Success)
         {
-            EggEntry entry = new EggEntry();
-            entry.id = i;
-            entry.eggPos = eggPositions[i];
-            eggEntries.Add(entry);
+            int index = 0;
+
+            // Check if Group 1 (the number) exists.
+            // If the name is just "user_egg", this group is empty, keeping index at 0.
+            if (match.Groups[1].Success)
+            {
+                int.TryParse(match.Groups[1].Value, out index);
+            }
+
+            foundEggs.Add((index, child.position));
+            child.gameObject.SetActive(false);
         }
     }
+    // 4. Sort the list based on the extracted index
+    // This ensures (1) comes before (3), even if (2) is missing.
+    foundEggs.Sort((a, b) => a.sortIndex.CompareTo(b.sortIndex));
+
+    // 5. Initialize the main list and populate it
+    if (eggEntries == null) eggEntries = new List<EggEntry>();
+    else eggEntries.Clear();
+
+    for (int i = 0; i < foundEggs.Count; i++)
+    {
+        EggEntry entry = new EggEntry();
+        
+        // 'id' is set to the loop index (0, 1, 2...) ensuring a clean sequence 
+        // regardless of gaps in the object naming (e.g. going from egg 1 to egg 3).
+        entry.id = i; 
+        entry.eggPos = foundEggs[i].position;
+        
+        eggEntries.Add(entry);
+    }
+
+    
+    // Debug log to confirm it worked
+    Debug.Log($"Initialized {eggEntries.Count} eggs from hierarchy.");
+}
 
     protected virtual void HideUIandBasket()
     {
