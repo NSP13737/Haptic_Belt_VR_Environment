@@ -71,7 +71,7 @@ public class BeltDistanceCaster : MonoBehaviour
             LineRenderer raycastVisual = rayInstances[i].GetComponent<LineRenderer>();
             // Set up new Ray
             float angle = i * (360f / rayCount); // Get angle for each ray
-            Vector3 direction = Quaternion.Euler(0, -angle, 0) * transform.forward; // Turn that angle into a vector with respect to forward facing direction (vector iterate in CCW direction)
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward; // Turn that angle into a vector with respect to forward facing direction (vector iterate in CCW direction)
             Ray currentRay = new Ray(transform.position, direction);
 
             // Raycast
@@ -99,10 +99,16 @@ public class BeltDistanceCaster : MonoBehaviour
         distancesBuffer[4] = float.MaxValue; // back
         distancesBuffer[5] = float.MaxValue; // back right
 
-        // Adding a two motor shift to array so that we can shift the belt (battery is now mounted on right side of body instead of back)
-        Array.Reverse(distancesBuffer);          // { 7, 6, 5, 4, 3, 2, 1, 0 }
-        Array.Reverse(distancesBuffer, 0, 6);    // { 2, 3, 4, 5, 6, 7, 1, 0 }
-        Array.Reverse(distancesBuffer, 6, distancesBuffer.Length - 6); // { 2, 3, 4, 5, 6, 7, 0, 1 }
+        //// Adding a two motor shift to array so that we can shift the belt (battery is now mounted on right side of body instead of back)
+        //Array.Reverse(distancesBuffer);          // { 7, 6, 5, 4, 3, 2, 1, 0 }
+        //Array.Reverse(distancesBuffer, 0, 6);    // { 2, 3, 4, 5, 6, 7, 1, 0 }
+        //Array.Reverse(distancesBuffer, 6, distancesBuffer.Length - 6); // { 2, 3, 4, 5, 6, 7, 0, 1 }
+
+        ////Further shifting values so that index 7 goes to 5, index 5 goes to 6, and index 6 goes to 7
+        //var temp = distancesBuffer[7];
+        //distancesBuffer[7] = distancesBuffer[6]; // 6 goes to 7
+        //distancesBuffer[6] = distancesBuffer[5]; // 5 goes to 6
+        //distancesBuffer[5] = temp;               // 7 goes to 5
 
 
         udp.setDistances(distancesBuffer);
