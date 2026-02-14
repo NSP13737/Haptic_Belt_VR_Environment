@@ -13,6 +13,7 @@ public class loggingManager : MonoBehaviour
     private static string logFileName = "logDump.csv";
     private float logStartTime;
     private int entryNum;
+    [SerializeField] private Study_Params_Manager paramsManager;
 
     public HeadTrackerTools headTracker;
 
@@ -165,10 +166,15 @@ public class loggingManager : MonoBehaviour
             //disable the panel once we have submitted everything
             caller.transform.root.gameObject.SetActive(false);
             
+            //Actually set the condition for the belt
+            paramsManager.changeCondition(conditionSlider.value);
+
+
         }
         catch (Exception e)
         {
             Debug.LogError("SubmitParticipantAndQuestions ERROR:\n" + e);
+
         }
     }
 

@@ -15,7 +15,7 @@ public class Study_Params_Manager : MonoBehaviour
 
     [Header("Condition")]
     [SerializeField, Range(1, 2)]
-    float conditionSelection = 1.0f;
+    static float conditionSelection = 1.0f;
 
     // -----------------------------
     // Activation Distance (meters)
@@ -23,12 +23,12 @@ public class Study_Params_Manager : MonoBehaviour
     float minActivationDist_sliderMin = 0.0f;
     float minActivationDist_sliderMax = 0.5f;
     [SerializeField, Range(0, 5)]
-    float minActivationDist = 0.0f;
+    static float minActivationDist = 0.0f;
 
     float maxActivationDist_sliderMin = 0.0f;
     float maxActivationDist_sliderMax = 2.0f;
     [SerializeField, Range(0, 5)]
-    float maxActivationDist = 5.0f;
+    static float maxActivationDist = 5.0f;
 
     // -----------------------------
     // Frequency (Hz)
@@ -36,12 +36,12 @@ public class Study_Params_Manager : MonoBehaviour
     float minFreqHz_sliderMin = 0.1f;
     float minFreqHz_sliderMax = 50.0f;
     [SerializeField, Range(0, 50)]
-    float minFreqHz = 0.0f;
+    static float minFreqHz = 0.0f;
 
     float maxFreqHz_sliderMin = 0.0f;
     float maxFreqHz_sliderMax = 40.0f;
     [SerializeField, Range(0, 50)]
-    float maxFreqHz = 50.0f;
+    static float maxFreqHz = 50.0f;
 
     // -----------------------------
     // Fixed Duty Cycle (0..1)
@@ -49,7 +49,7 @@ public class Study_Params_Manager : MonoBehaviour
     float fixedDutyCycle_sliderMin = 0.0f;
     float fixedDutyCycle_sliderMax = 1.0f;
     [SerializeField, Range(0, 1)]
-    float fixedDutyCycle = 0.5f;
+    static float fixedDutyCycle = 0.5f;
 
     // -----------------------------
     // Fixed Frequency (Hz)
@@ -57,7 +57,7 @@ public class Study_Params_Manager : MonoBehaviour
     float fixedFreqHz_sliderMin = 0.0f;
     float fixedFreqHz_sliderMax = 40.0f;
     [SerializeField, Range(0, 50)]
-    float fixedFreqHz = 10.0f;
+    static float fixedFreqHz = 10.0f;
 
     // -----------------------------
     // Just Detectable Intensity (0..1)
@@ -65,7 +65,7 @@ public class Study_Params_Manager : MonoBehaviour
     float justDetectableIntensity_sliderMin = 0.0f;
     float justDetectableIntensity_sliderMax = 1.0f;
     [SerializeField, Range(0, 1)]
-    float justDetectableIntensity = 0.2f;
+    static float justDetectableIntensity = 0.2f;
 
     // -----------------------------
     // Events
@@ -102,48 +102,103 @@ public class Study_Params_Manager : MonoBehaviour
     }
 
     // =========================
-    // Public API (Normalized Input)
+    // Public API
     // =========================
 
     public void changeCondition()
     {
         conditionSelection = (conditionSelection >= 2.0f) ? 1.0f : 2.0f;
+
+        if (conditionSelection == 1.0f)
+        {
+            ChangeMinActivationDist(0.35f, true);
+            ChangeMaxActivationDist(2.0f, true);
+            ChangeMinFreqHz(2.5f, true);
+            ChangeMaxFreqHz(15.5f, true);
+            ChangeFixedDutyCycle(0.45f, true);
+        }
+        else if (conditionSelection == 2.0f)
+        {
+            ChangeMinActivationDist(0.1f, true);
+            ChangeMaxActivationDist(2.0f, true);
+            ChangeFixedFreqHz(3.0f, true);
+        }
+
+        onChangeCondition?.Invoke(conditionSelection);
+    }
+    public void changeCondition(float condition)
+    {
+        conditionSelection = condition;
+
+        if (conditionSelection == 1.0f)
+        {
+            ChangeMinActivationDist(0.35f, true);
+            ChangeMaxActivationDist(2.0f, true);
+            ChangeMinFreqHz(2.5f, true);
+            ChangeMaxFreqHz(15.5f, true);
+            ChangeFixedDutyCycle(0.45f, true);
+        }
+        else if (conditionSelection == 2.0f)
+        {
+            ChangeMinActivationDist(0.1f, true);
+            ChangeMaxActivationDist(2.0f, true);
+            ChangeFixedFreqHz(3.0f, true);
+        }
+
         onChangeCondition?.Invoke(conditionSelection);
     }
 
-    public void ChangeMinActivationDist(float normalizedVal)
+    public void ChangeMinActivationDist(float val, bool useRawValue = false)
     {
-        minActivationDist = Mathf.Lerp(minActivationDist_sliderMin, minActivationDist_sliderMax, normalizedVal);
+        minActivationDist = useRawValue
+            ? Mathf.Clamp(val, minActivationDist_sliderMin, minActivationDist_sliderMax)
+            : Mathf.Lerp(minActivationDist_sliderMin, minActivationDist_sliderMax, val);
+
         onChangeMinActivationDist?.Invoke(minActivationDist);
     }
 
-    public void ChangeMaxActivationDist(float normalizedVal)
+    public void ChangeMaxActivationDist(float val, bool useRawValue = false)
     {
-        maxActivationDist = Mathf.Lerp(maxActivationDist_sliderMin, maxActivationDist_sliderMax, normalizedVal);
+        maxActivationDist = useRawValue
+            ? Mathf.Clamp(val, maxActivationDist_sliderMin, maxActivationDist_sliderMax)
+            : Mathf.Lerp(maxActivationDist_sliderMin, maxActivationDist_sliderMax, val);
+
         onChangeMaxActivationDist?.Invoke(maxActivationDist);
     }
 
-    public void ChangeMinFreqHz(float normalizedVal)
+    public void ChangeMinFreqHz(float val, bool useRawValue = false)
     {
-        minFreqHz = Mathf.Lerp(minFreqHz_sliderMin, minFreqHz_sliderMax, normalizedVal);
+        minFreqHz = useRawValue
+            ? Mathf.Clamp(val, minFreqHz_sliderMin, minFreqHz_sliderMax)
+            : Mathf.Lerp(minFreqHz_sliderMin, minFreqHz_sliderMax, val);
+
         onChangeMinFreqHz?.Invoke(minFreqHz);
     }
 
-    public void ChangeMaxFreqHz(float normalizedVal)
+    public void ChangeMaxFreqHz(float val, bool useRawValue = false)
     {
-        maxFreqHz = Mathf.Lerp(maxFreqHz_sliderMin, maxFreqHz_sliderMax, normalizedVal);
+        maxFreqHz = useRawValue
+            ? Mathf.Clamp(val, maxFreqHz_sliderMin, maxFreqHz_sliderMax)
+            : Mathf.Lerp(maxFreqHz_sliderMin, maxFreqHz_sliderMax, val);
+
         onChangeMaxFreqHz?.Invoke(maxFreqHz);
     }
 
-    public void ChangeFixedDutyCycle(float normalizedVal)
+    public void ChangeFixedDutyCycle(float val, bool useRawValue = false)
     {
-        fixedDutyCycle = Mathf.Lerp(fixedDutyCycle_sliderMin, fixedDutyCycle_sliderMax, normalizedVal);
+        fixedDutyCycle = useRawValue
+            ? Mathf.Clamp(val, fixedDutyCycle_sliderMin, fixedDutyCycle_sliderMax)
+            : Mathf.Lerp(fixedDutyCycle_sliderMin, fixedDutyCycle_sliderMax, val);
+
         onChangeFixedDutyCycle?.Invoke(fixedDutyCycle);
     }
 
-    public void ChangeFixedFreqHz(float normalizedVal)
+    public void ChangeFixedFreqHz(float val, bool useRawValue = false)
     {
-        fixedFreqHz = Mathf.Lerp(fixedFreqHz_sliderMin, fixedFreqHz_sliderMax, normalizedVal);
+        fixedFreqHz = useRawValue
+            ? Mathf.Clamp(val, fixedFreqHz_sliderMin, fixedFreqHz_sliderMax)
+            : Mathf.Lerp(fixedFreqHz_sliderMin, fixedFreqHz_sliderMax, val);
+
         onChangeFixedFreqHz?.Invoke(fixedFreqHz);
     }
 
