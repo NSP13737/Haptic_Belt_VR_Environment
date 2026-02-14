@@ -17,6 +17,8 @@ public class EggBasketManager : MonoBehaviour
     [SerializeField] protected GameObject eggPrefab;
     [SerializeField] protected GameObject basketObj;
     [SerializeField] protected GameObject studyDoneUI;
+    [SerializeField] protected AudioClip eggCollectionSound;
+    [SerializeField] protected GameObject basket; //used to get basket pos for playing collection sound effect
     [Header("Optional Params")]
     [SerializeField] protected loggingManager studyLogger; // Nullable for training child
     [SerializeField] protected GameObject playerHeadAnchor; // Nullable for training child
@@ -132,6 +134,8 @@ protected virtual void InitializeEggList()
 
     protected virtual void _onEggCompletion()
     {
+        AudioSource.PlayClipAtPoint(eggCollectionSound, basket.transform.position, 2.0f);
+
         if (eggEntries.Count == 0)
         {
             Debug.LogWarning("No egg/basket pairs left to spawn.", this);
