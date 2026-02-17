@@ -8,12 +8,12 @@ public class BoundaryRenderControl : MonoBehaviour
     private List<GameObject> allBoundaryGOs = new List<GameObject>();
 
     [SerializeField] private bool renderBoundaries = false;
-    [SerializeField] private BeltDistanceCaster beltRayCaster;
+    //[SerializeField] private BeltDistanceCaster beltRayCaster;
     
     // Start is called before the first frame update
     void Start()
     {
-        beltRayCaster.beltRayVisibility = false;
+        //beltRayCaster.beltRayVisibility = false;
 
         GameObject[] allGOs = FindObjectsOfType<GameObject>();
         foreach (GameObject go in allGOs)
@@ -31,7 +31,7 @@ public class BoundaryRenderControl : MonoBehaviour
     {
         if (!renderBoundaries)
         {
-            beltRayCaster.beltRayVisibility = false;
+            //beltRayCaster.beltRayVisibility = false;
             foreach (GameObject go in allBoundaryGOs)
             {
                 go.GetComponent<Renderer>().enabled = false;
@@ -39,7 +39,7 @@ public class BoundaryRenderControl : MonoBehaviour
         }
         else
         {
-            beltRayCaster.beltRayVisibility = true;
+            //beltRayCaster.beltRayVisibility = true;
             foreach (GameObject go in allBoundaryGOs)
             {
                 go.GetComponent<Renderer>().enabled = true;

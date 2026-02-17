@@ -119,7 +119,7 @@ public class Study_Params_Manager : MonoBehaviour
         }
         else if (conditionSelection == 2.0f)
         {
-            ChangeMinActivationDist(0.1f, true);
+            ChangeMinActivationDist(0.35f, true);
             ChangeMaxActivationDist(2.0f, true);
             ChangeFixedFreqHz(3.0f, true);
         }
@@ -140,7 +140,7 @@ public class Study_Params_Manager : MonoBehaviour
         }
         else if (conditionSelection == 2.0f)
         {
-            ChangeMinActivationDist(0.1f, true);
+            ChangeMinActivationDist(0.35f, true);
             ChangeMaxActivationDist(2.0f, true);
             ChangeFixedFreqHz(3.0f, true);
         }

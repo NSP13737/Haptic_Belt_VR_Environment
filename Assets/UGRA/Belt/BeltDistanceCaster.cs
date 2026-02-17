@@ -11,9 +11,7 @@ public class BeltDistanceCaster : MonoBehaviour
     float maxRayDist;
     [SerializeField]
     GameObject rayPrefab;
-    [SerializeField] public bool beltRayVisibility = true;
-    private bool prevBeltRayVisibility; //for keeping track of when visibility changes so that we don't check things every frame in update
-
+    
     int rayCount = 8;
 
     UDP_Manager udp;
@@ -40,11 +38,13 @@ public class BeltDistanceCaster : MonoBehaviour
     {
         for (int i = 0; i < rayCount; i++)
         {
+            if ((i == 3) || (i == 4) || (i == 5))
+            {
+                continue;
+            }
             GameObject rayInstance = Instantiate(rayPrefab, transform);
             rayInstances[i] = rayInstance;
         }
-
-        prevBeltRayVisibility = beltRayVisibility;
 
     }
 
@@ -53,10 +53,9 @@ public class BeltDistanceCaster : MonoBehaviour
         getRealtimeDistances = !disable;
     }
 
-
+    
 
     // Update is called once per frame
-   
     void Update()
     {
         if (getRealtimeDistances)
@@ -64,28 +63,7 @@ public class BeltDistanceCaster : MonoBehaviour
             getAndSendDistances();
         }
         else { return; }
-
-
-        //If we toggled the ray visibility, either make the rays visible or not
-        if (prevBeltRayVisibility != beltRayVisibility)
-        {
-            prevBeltRayVisibility = beltRayVisibility;
-            if (beltRayVisibility)
-            {
-                foreach (GameObject rayInstance in rayInstances)
-                {
-                    rayInstance.SetActive(true);
-                }
-            }
-            else
-            {
-                foreach (GameObject rayInstance in rayInstances)
-                {
-                    rayInstance.SetActive(false);
-                }
-            }
-        }
-
+        
     }
 
     private void getAndSendDistances()
@@ -94,6 +72,10 @@ public class BeltDistanceCaster : MonoBehaviour
         Vector3 endPoint;
         for (int i = 0; i < rayCount; i++)
         {
+            if ((i == 3) || (i == 4) || (i == 5))
+            {
+                continue;
+            }
             LineRenderer raycastVisual = rayInstances[i].GetComponent<LineRenderer>();
             // Set up new Ray
             float angle = i * (360f / rayCount); // Get angle for each ray
@@ -105,7 +87,11 @@ public class BeltDistanceCaster : MonoBehaviour
             if (Physics.Raycast(currentRay, out currentHit, maxRayDist, combinedMask))
             {
                 distancesBuffer[i] = currentHit.distance;
-                endPoint = currentHit.point;
+
+                // Switch between these to visualize distance of the rays
+                //endPoint = currentHit.point;
+                endPoint = startPoint + (direction * maxRayDist);
+
                 //Debug.DrawRay(currentRay.origin, currentRay.direction*currentHit.distance, Color.green);
                 //Debug.Log(currentHit.distance);
             }
@@ -116,22 +102,25 @@ public class BeltDistanceCaster : MonoBehaviour
                 //Debug.DrawRay(currentRay.origin, currentRay.direction * maxRayDist, Color.red);
                 //Debug.Log(float.MaxValue);
             }
-
-
-            if (beltRayVisibility)
-            {
-                if ((i == 3) || (i == 4) || (i == 5)) {
-                    ; //skip visualization of back lines since we have removed them
-                }
-                else
-                {
-                    raycastVisual.SetPosition(0, startPoint);
-                    raycastVisual.SetPosition(1, endPoint);
-                }
-                    
-            }
-            
+            raycastVisual.SetPosition(0, startPoint);
+            raycastVisual.SetPosition(1, endPoint);
         }
+
+        //Manually cutting out distances from back-left and back-right motors
+        distancesBuffer[3] = float.MaxValue; //back left
+        distancesBuffer[4] = float.MaxValue; // back
+        distancesBuffer[5] = float.MaxValue; // back right
+
+        //// Adding a two motor shift to array so that we can shift the belt (battery is now mounted on right side of body instead of back)
+        //Array.Reverse(distancesBuffer);          // { 7, 6, 5, 4, 3, 2, 1, 0 }
+        //Array.Reverse(distancesBuffer, 0, 6);    // { 2, 3, 4, 5, 6, 7, 1, 0 }
+        //Array.Reverse(distancesBuffer, 6, distancesBuffer.Length - 6); // { 2, 3, 4, 5, 6, 7, 0, 1 }
+
+        ////Further shifting values so that index 7 goes to 5, index 5 goes to 6, and index 6 goes to 7
+        //var temp = distancesBuffer[7];
+        //distancesBuffer[7] = distancesBuffer[6]; // 6 goes to 7
+        //distancesBuffer[6] = distancesBuffer[5]; // 5 goes to 6
+        //distancesBuffer[5] = temp;               // 7 goes to 5
 
 
         udp.setDistances(distancesBuffer);
