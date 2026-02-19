@@ -65,7 +65,7 @@ public class Study_Params_Manager : MonoBehaviour
     float justDetectableIntensity_sliderMin = 0.0f;
     float justDetectableIntensity_sliderMax = 1.0f;
     [SerializeField, Range(0, 1)]
-    static float justDetectableIntensity = 0.2f;
+    static float justDetectableIntensity = 0.0f;
 
     // -----------------------------
     // Events
