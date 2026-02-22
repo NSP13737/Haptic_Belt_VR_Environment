@@ -17,7 +17,7 @@ public class EggBasketManager : MonoBehaviour
     [SerializeField] protected GameObject eggPrefab;
     [SerializeField] protected GameObject basketObj;
     [SerializeField] protected GameObject studyDoneUI;
-    [SerializeField] protected AudioClip eggCollectionSound;
+    [SerializeField] protected AudioClip eggSpawnSound;
     [SerializeField] protected GameObject basket; //used to get basket pos for playing collection sound effect
     [Header("Optional Params")]
     [SerializeField] protected loggingManager studyLogger; // Nullable for training child
@@ -110,8 +110,10 @@ protected virtual void InitializeEggList()
 
     protected virtual void spawnNextEgg()
     {
-
+        
         GameObject egg = Instantiate(eggPrefab, eggEntries[0].eggPos, Quaternion.identity);
+
+        AudioSource.PlayClipAtPoint(eggSpawnSound, egg.transform.position, 2.0f);
 
         egg.GetComponent<EggLogic>().SetManager(this); // this makes sure we are explicit about what the script is referencing since instanciating stuff can sometimes make this weird
 
@@ -134,7 +136,7 @@ protected virtual void InitializeEggList()
 
     protected virtual void _onEggCompletion()
     {
-        AudioSource.PlayClipAtPoint(eggCollectionSound, basket.transform.position, 2.0f);
+        
 
         if (eggEntries.Count == 0)
         {
