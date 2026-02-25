@@ -122,6 +122,11 @@ public class BeltDistanceCaster : MonoBehaviour
         //distancesBuffer[6] = distancesBuffer[5]; // 5 goes to 6
         //distancesBuffer[5] = temp;               // 7 goes to 5
 
+        //Swapping front and right motors (for more universal sizing on belt)
+        var temp = distancesBuffer[0];
+        distancesBuffer[0] = distancesBuffer[2];
+        distancesBuffer[2] = temp;
+
 
         udp.setDistances(distancesBuffer);
     }
