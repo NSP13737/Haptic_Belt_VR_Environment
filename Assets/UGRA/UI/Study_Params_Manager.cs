@@ -1,5 +1,3 @@
-
-using Meta.WitAi.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +10,10 @@ public class FloatEvent : UnityEvent<float> { }
 public class Study_Params_Manager : MonoBehaviour
 {
     UDP_Manager udp;
+
+    // --- DIRTY FLAG ---
+    // Set to true by default so it sends the initial state on the first frame
+    private bool _requiresUpdate = true;
 
     [Header("Condition")]
     [SerializeField, Range(1, 2)]
@@ -87,8 +89,17 @@ public class Study_Params_Manager : MonoBehaviour
         udp = GetComponent<UDP_Manager>();
     }
 
+    // Triggers automatically if you change a value in the Unity Inspector
+    private void OnValidate()
+    {
+        _requiresUpdate = true;
+    }
+
     void Update()
     {
+        // Skip the update entirely if nothing has changed
+        if (!_requiresUpdate) return;
+
         studyParamsBuffer[0] = conditionSelection;
         studyParamsBuffer[1] = minActivationDist;
         studyParamsBuffer[2] = maxActivationDist;
@@ -99,6 +110,9 @@ public class Study_Params_Manager : MonoBehaviour
         studyParamsBuffer[7] = justDetectableIntensity;
 
         udp.setStudyParams(studyParamsBuffer);
+
+        // Reset the flag after sending
+        _requiresUpdate = false;
     }
 
     // =========================
@@ -125,6 +139,7 @@ public class Study_Params_Manager : MonoBehaviour
         }
 
         onChangeCondition?.Invoke(conditionSelection);
+        _requiresUpdate = true;
     }
     public void changeCondition(float condition)
     {
@@ -146,6 +161,7 @@ public class Study_Params_Manager : MonoBehaviour
         }
 
         onChangeCondition?.Invoke(conditionSelection);
+        _requiresUpdate = true;
     }
 
     public void ChangeMinActivationDist(float val, bool useRawValue = false)
@@ -155,6 +171,7 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(minActivationDist_sliderMin, minActivationDist_sliderMax, val);
 
         onChangeMinActivationDist?.Invoke(minActivationDist);
+        _requiresUpdate = true;
     }
 
     public void ChangeMaxActivationDist(float val, bool useRawValue = false)
@@ -164,6 +181,7 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(maxActivationDist_sliderMin, maxActivationDist_sliderMax, val);
 
         onChangeMaxActivationDist?.Invoke(maxActivationDist);
+        _requiresUpdate = true;
     }
 
     public void ChangeMinFreqHz(float val, bool useRawValue = false)
@@ -173,6 +191,7 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(minFreqHz_sliderMin, minFreqHz_sliderMax, val);
 
         onChangeMinFreqHz?.Invoke(minFreqHz);
+        _requiresUpdate = true;
     }
 
     public void ChangeMaxFreqHz(float val, bool useRawValue = false)
@@ -182,6 +201,7 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(maxFreqHz_sliderMin, maxFreqHz_sliderMax, val);
 
         onChangeMaxFreqHz?.Invoke(maxFreqHz);
+        _requiresUpdate = true;
     }
 
     public void ChangeFixedDutyCycle(float val, bool useRawValue = false)
@@ -191,6 +211,7 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(fixedDutyCycle_sliderMin, fixedDutyCycle_sliderMax, val);
 
         onChangeFixedDutyCycle?.Invoke(fixedDutyCycle);
+        _requiresUpdate = true;
     }
 
     public void ChangeFixedFreqHz(float val, bool useRawValue = false)
@@ -200,13 +221,16 @@ public class Study_Params_Manager : MonoBehaviour
             : Mathf.Lerp(fixedFreqHz_sliderMin, fixedFreqHz_sliderMax, val);
 
         onChangeFixedFreqHz?.Invoke(fixedFreqHz);
+        _requiresUpdate = true;
     }
 
     public void ChangeJustDetectableIntensity(float normalizedVal)
     {
         justDetectableIntensity = Mathf.Lerp(justDetectableIntensity_sliderMin, justDetectableIntensity_sliderMax, normalizedVal);
         onChangeJustDetectableIntensity?.Invoke(justDetectableIntensity);
+        _requiresUpdate = true;
     }
+
     public void DeltaChangeJustDetectableIntensity(float instensityDelta)
     {
         float tmp = udp.getParam_JustNoticableIntensity() + instensityDelta;
@@ -220,8 +244,9 @@ public class Study_Params_Manager : MonoBehaviour
         {
             tmp = 1;
         }
-        
+
         justDetectableIntensity = Mathf.Lerp(justDetectableIntensity_sliderMin, justDetectableIntensity_sliderMax, tmp);
         onChangeJustDetectableIntensity?.Invoke(justDetectableIntensity);
+        _requiresUpdate = true;
     }
 }

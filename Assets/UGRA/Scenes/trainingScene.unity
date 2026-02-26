@@ -6025,6 +6025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flagGO: {fileID: 1105658653}
   udpManager: {fileID: 765965394}
+  paramsManager: {fileID: 765965391}
   beltDistanceCaster: {fileID: 765965393}
 --- !u!1 &1088267024
 GameObject:

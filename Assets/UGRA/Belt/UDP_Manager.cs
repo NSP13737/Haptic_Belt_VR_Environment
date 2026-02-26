@@ -40,6 +40,10 @@ public class UDP_Manager : MonoBehaviour
     {
         return float_data[15];
     }
+    public float getParam_Condition()
+    {
+        return float_data[8];
+    }
 
     byte[] ProcessUDP(float[] dists)
     {
