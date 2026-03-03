@@ -15,6 +15,7 @@ public class TrainingUI_Manager : MonoBehaviour
     [Header("Below is for use with Min intensity UI only")]
     [SerializeField] GameObject boundaryVisibilityUI;
     [SerializeField] EggBasketManager eggBasketManager;
+    [SerializeField] loggingManager logger;
 
 
     // Start is called before the first frame update
@@ -55,6 +56,7 @@ public class TrainingUI_Manager : MonoBehaviour
 
         boundaryVisibilityUI.transform.position = this.gameObject.transform.position;
         eggBasketManager.startEggRoutineFromUI(this.gameObject); // this will make the intensity UI disappear
+        logger.WriteLog("JustNoticableIntensity," + udpManager.getParam_JustNoticableIntensity() + "\n");
 
 
     }

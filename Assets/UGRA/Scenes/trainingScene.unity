@@ -579,6 +579,7 @@ MonoBehaviour:
   udpManager: {fileID: 765965394}
   boundaryVisibilityUI: {fileID: 144396598}
   eggBasketManager: {fileID: 0}
+  logger: {fileID: 0}
 --- !u!4 &144396600
 Transform:
   m_ObjectHideFlags: 0
@@ -6345,6 +6346,7 @@ MonoBehaviour:
   udpManager: {fileID: 765965394}
   boundaryVisibilityUI: {fileID: 4219591888136671266}
   eggBasketManager: {fileID: 34345205}
+  logger: {fileID: 1050845240}
 --- !u!4 &1105658655
 Transform:
   m_ObjectHideFlags: 0
@@ -13557,6 +13559,7 @@ MonoBehaviour:
   udpManager: {fileID: 765965394}
   boundaryVisibilityUI: {fileID: 4219591888136671266}
   eggBasketManager: {fileID: 0}
+  logger: {fileID: 0}
 --- !u!222 &5534731657490145072
 CanvasRenderer:
   m_ObjectHideFlags: 0
